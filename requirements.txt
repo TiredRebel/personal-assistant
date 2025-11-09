@@ -1,0 +1,16 @@
+# Core dependencies (required)
+python-dateutil>=2.8.2  # Advanced date parsing and manipulation
+
+# Optional dependencies for enhanced features
+colorama>=0.4.6  # Colored terminal output (Windows compatibility)
+
+# Development dependencies (for testing and code quality)
+pytest>=7.4.0  # Unit testing framework
+pytest-cov>=4.1.0  # Test coverage reporting
+black>=23.7.0  # Code formatting
+pylint>=2.17.0  # Code linting
+mypy>=1.4.0  # Static type checking
+flake8>=6.0.0  # Style guide enforcement
+
+# Documentation
+sphinx>=7.0.0  # Documentation generation (optional)
