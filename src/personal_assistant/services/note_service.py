@@ -89,12 +89,6 @@ class NoteService:
         Returns:
             List of matching notes, sorted by relevance
         """
-        # Implementation:
-        # 1. Convert query to lowercase
-        # 2. Filter notes where query matches title or content
-        # 3. Sort by updated_at (most recent first)
-        # 4. Return matching notes
-
         query = query.lower()
         matching_notes: List[Note] = []
         for note in self.notes:

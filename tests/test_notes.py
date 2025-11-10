@@ -127,7 +127,7 @@ class TestNoteModel:
     def test_note_from_dict(self) -> None:
         """Test note deserialization from dictionary."""
         data = {
-            "id": 1,
+            "id": "1",
             "title": "Team Meeting",
             "content": "Meeting notes",
             "tags": ["work", "meeting"],
@@ -137,12 +137,69 @@ class TestNoteModel:
 
         note = Note.from_dict(data)
 
-        assert note.id == 1
+        assert note.id == "1"
         assert note.title == "Team Meeting"
         assert note.content == "Meeting notes"
         assert sorted(note.tags) == ["meeting", "work"]
         assert note.created_at == datetime(1990, 5, 15, 10, 30)
         assert note.updated_at == datetime(1990, 5, 15, 12, 0)
+
+    def test_note_from_dict_types_validation(self) -> None:
+        """Test that from_dict raises TypeError for invalid field types."""
+        invalid_data_samples = [
+            {
+                "id": 1,
+                "title": "Note",
+                "content": "Content",
+                "tags": [],
+                "created_at": "1990-05-15T10:30:00",
+                "updated_at": "1990-05-15T12:00:00",
+            },
+            {
+                "id": "1",
+                "title": 123,
+                "content": "Content",
+                "tags": [],
+                "created_at": "1990-05-15T10:30:00",
+                "updated_at": "1990-05-15T12:00:00",
+            },
+            {
+                "id": "1",
+                "title": "Note",
+                "content": 456,
+                "tags": [],
+                "created_at": "1990-05-15T10:30:00",
+                "updated_at": "1990-05-15T12:00:00",
+            },
+            {
+                "id": "1",
+                "title": "Note",
+                "content": "Content",
+                "tags": "not-a-list",
+                "created_at": "1990-05-15T10:30:00",
+                "updated_at": "1990-05-15T12:00:00",
+            },
+            {
+                "id": "1",
+                "title": "Note",
+                "content": "Content",
+                "tags": [],
+                "created_at": 12345,
+                "updated_at": "1990-05-15T12:00:00",
+            },
+            {
+                "id": "1",
+                "title": "Note",
+                "content": "Content",
+                "tags": [],
+                "created_at": "1990-05-15T10:30:00",
+                "updated_at": 67890,
+            },
+        ]
+
+        for invalid_data in invalid_data_samples:
+            with pytest.raises(TypeError):
+                Note.from_dict(invalid_data)
 
     def test_note_validation_empty_content(self) -> None:
         """Test that empty content raises ValueError."""
