@@ -137,7 +137,7 @@ class TestNoteService:
 
     def test_search_notes_by_any_tag_sorting(self, service):
         """Test that OR tag search sorts by number of matching tags."""
-        note1 = service.create_note(content="Note 1", tags=["a"])
+        service.create_note(content="Note 1", tags=["a"])
         note2 = service.create_note(content="Note 2", tags=["a", "b", "c"])
         note3 = service.create_note(content="Note 3", tags=["a", "b"])
 
@@ -255,8 +255,8 @@ class TestNoteService:
 
     def test_get_all_notes(self, service):
         """Test getting all notes sorted by updated_at."""
-        note1 = service.create_note(content="First")
-        note2 = service.create_note(content="Second")
+        service.create_note(content="First")
+        service.create_note(content="Second")
         note3 = service.create_note(content="Third")
 
         all_notes = service.get_all_notes()

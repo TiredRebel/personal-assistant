@@ -5,9 +5,10 @@ This module provides the NoteService class which handles all business logic
 for note operations including creation, editing, deletion, searching, and tag management.
 """
 
-from typing import Any, List, Optional, Set
+from typing import List, Optional, Set
 
-from personal_assistant.models.note import Note
+from src.personal_assistant.models.note import Note
+from src.personal_assistant.storage.file_storage import FileStorage
 
 
 class NoteService:
@@ -22,7 +23,7 @@ class NoteService:
     - Tag management
     """
 
-    def __init__(self, storage: Any) -> None:
+    def __init__(self, storage: FileStorage) -> None:
         """
         Initialize note service.
 
@@ -35,14 +36,13 @@ class NoteService:
 
     def load_notes(self) -> None:
         """Load notes from storage."""
-        # Implementation: Load from storage.load("notes")
-        # TODO implement storage
-        raise NotImplementedError
+        notes_data = self.storage.load("notes.json")
+        self.notes = [Note.from_dict(data) for data in notes_data]
 
     def save_notes(self) -> None:
         """Save notes to storage."""
-        # Implementation: Save to storage.save("notes", notes)
-        raise NotImplementedError
+        notes_data = [note.to_dict() for note in self.notes]
+        self.storage.save("notes.json", notes_data)
 
     def create_note(
         self, content: str, title: Optional[str] = None, tags: Optional[List[str]] = None
@@ -96,7 +96,10 @@ class NoteService:
         Returns:
             List of matching notes, sorted by relevance
         """
-        query = query.lower()
+        if not query or not query.strip():
+            return []
+
+        query = query.lower().strip()
         matching_notes: List[Note] = []
         for note in self.notes:
             if (
@@ -140,7 +143,13 @@ class NoteService:
         Returns:
             List of notes that have at least one specified tag
         """
-        normalized_tags = [tag.lower().strip() for tag in tags]
+        if not tags:
+            return []
+
+        normalized_tags = [tag.lower().strip() for tag in tags if tag and tag.strip()]
+        if not normalized_tags:
+            return []
+
         matching_notes: List[Note] = []
         for note in self.notes:
             if any(tag in note.tags for tag in normalized_tags):
@@ -306,4 +315,5 @@ class NoteService:
         Returns:
             List of notes sorted by tag count (descending)
         """
+        return sorted(self.notes, key=lambda n: len(n.tags), reverse=True)
         return sorted(self.notes, key=lambda n: len(n.tags), reverse=True)

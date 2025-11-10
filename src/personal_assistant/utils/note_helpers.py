@@ -7,7 +7,7 @@ This module provides advanced features for note operations including:
 """
 
 import re
-from typing import List, Set
+from typing import Dict, List, Set
 
 from personal_assistant.services.note_service import NoteService
 
@@ -151,7 +151,7 @@ def get_note_statistics(service: NoteService) -> dict:
     notes = service.notes
 
     # Count tag occurrences
-    tag_counts: dict[str, int] = {}
+    tag_counts: Dict[str, int] = {}
     total_tag_count = 0
     for note in notes:
         total_tag_count += len(note.tags)
