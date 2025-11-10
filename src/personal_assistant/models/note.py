@@ -105,7 +105,7 @@ class Note:
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> 'Note':
+    def from_dict(cls, data: dict) -> "Note":
         """
         Create note from dictionary (JSON deserialization).
 
