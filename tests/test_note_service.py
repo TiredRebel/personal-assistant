@@ -186,6 +186,19 @@ class TestNoteService:
         with pytest.raises(ValueError, match="cannot be empty"):
             service.edit_note(note_id=note.id, content="  ")
 
+    def test_edit_note_normalizes_tags(self, service):
+        """Test that editing note properly normalizes tags."""
+        note = service.create_note(content="Test content", tags=["original"])
+
+        # Edit with unnormalized tags (uppercase, duplicates, extra spaces)
+        updated_note = service.edit_note(
+            note_id=note.id,
+            tags=["Python", " TESTING ", "python", "Demo", " testing "],
+        )
+
+        # Tags should be normalized: lowercase, stripped, deduplicated, sorted
+        assert updated_note.tags == ["demo", "python", "testing"]
+
     def test_delete_note_success(self, service):
         """Test deleting existing note."""
         note = service.create_note(content="To be deleted")

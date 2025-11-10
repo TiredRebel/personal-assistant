@@ -316,4 +316,3 @@ class NoteService:
             List of notes sorted by tag count (descending)
         """
         return sorted(self.notes, key=lambda n: len(n.tags), reverse=True)
-        return sorted(self.notes, key=lambda n: len(n.tags), reverse=True)
