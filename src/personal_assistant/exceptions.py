@@ -9,16 +9,10 @@ and more informative error messages throughout the application.
 class NoteError(Exception):
     """Base exception for note-related errors."""
 
-    pass
-
 
 class NoteNotFoundError(NoteError):
     """Raised when note is not found."""
 
-    pass
-
 
 class InvalidNoteContentError(NoteError):
     """Raised when note content is invalid."""
-
-    pass

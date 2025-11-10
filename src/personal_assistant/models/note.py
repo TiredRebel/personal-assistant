@@ -1,3 +1,10 @@
+"""
+Note model for the Personal Assistant application.
+
+This module defines the Note class which represents a text note with optional tags,
+timestamps, and serialization capabilities.
+"""
+
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -25,7 +32,7 @@ class Note:
     created_at: datetime = field(default_factory=datetime.now)
     updated_at: datetime = field(default_factory=datetime.now)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Validate note data after initialization."""
         if not self.content or not self.content.strip():
             raise ValueError("Note content cannot be empty")
@@ -36,7 +43,7 @@ class Note:
         # Remove duplicate tags and sort them for consistent order
         self.tags = sorted(set(self.tags))
 
-    def add_tag(self, tag: str):
+    def add_tag(self, tag: str) -> None:
         """
         Add a tag to the note, duplicates or empty tags are skipped.
 
@@ -48,7 +55,7 @@ class Note:
             self.tags.append(tag)
             self.updated_at = datetime.now()
 
-    def remove_tag(self, tag: str):
+    def remove_tag(self, tag: str) -> None:
         """
         Remove a tag from the note if exists.
 
@@ -72,7 +79,7 @@ class Note:
         """
         return tag.lower().strip() in self.tags
 
-    def update_content(self, content: str, title: Optional[str] = None):
+    def update_content(self, content: str, title: Optional[str] = None) -> None:
         """
         Update note content and title.
 
@@ -88,7 +95,7 @@ class Note:
             self.title = title
         self.updated_at = datetime.now()
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         Convert note to dictionary for JSON serialization.
 
@@ -111,7 +118,7 @@ class Note:
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> "Note":
+    def from_dict(cls, data: Dict[str, Any]) -> "Note":
         """
         Create note from dictionary (JSON deserialization).
 

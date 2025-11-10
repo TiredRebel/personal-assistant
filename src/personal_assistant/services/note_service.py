@@ -1,4 +1,11 @@
-from typing import List, Optional, Set
+"""
+Note service for the Personal Assistant application.
+
+This module provides the NoteService class which handles all business logic
+for note operations including creation, editing, deletion, searching, and tag management.
+"""
+
+from typing import Any, List, Optional, Set
 
 from personal_assistant.models.note import Note
 
@@ -15,7 +22,7 @@ class NoteService:
     - Tag management
     """
 
-    def __init__(self, storage):
+    def __init__(self, storage: Any) -> None:
         """
         Initialize note service.
 
@@ -26,13 +33,13 @@ class NoteService:
         self.notes: List[Note] = []
         self.load_notes()
 
-    def load_notes(self):
+    def load_notes(self) -> None:
         """Load notes from storage."""
         # Implementation: Load from storage.load("notes")
         # TODO implement storage
         raise NotImplementedError
 
-    def save_notes(self):
+    def save_notes(self) -> None:
         """Save notes to storage."""
         # Implementation: Save to storage.save("notes", notes)
         raise NotImplementedError

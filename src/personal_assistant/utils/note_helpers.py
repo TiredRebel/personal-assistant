@@ -151,7 +151,7 @@ def get_note_statistics(service: NoteService) -> dict:
     notes = service.notes
 
     # Count tag occurrences
-    tag_counts = {}
+    tag_counts: dict[str, int] = {}
     total_tag_count = 0
     for note in notes:
         total_tag_count += len(note.tags)
