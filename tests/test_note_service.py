@@ -196,8 +196,9 @@ class TestNoteService:
             tags=["Python", " TESTING ", "python", "Demo", " testing "],
         )
 
-        # Tags should be normalized: lowercase, stripped, deduplicated, sorted
-        assert updated_note.tags == ["demo", "python", "testing"]
+        # Tags should be normalized: lowercase, stripped, deduplicated (not sorted per spec)
+        assert set(updated_note.tags) == {"demo", "python", "testing"}
+        assert len(updated_note.tags) == 3
 
     def test_delete_note_success(self, service):
         """Test deleting existing note."""

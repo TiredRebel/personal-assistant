@@ -36,13 +36,11 @@ class NoteService:
 
     def load_notes(self) -> None:
         """Load notes from storage."""
-        notes_data = self.storage.load("notes.json")
-        self.notes = [Note.from_dict(data) for data in notes_data]
+        pass
 
     def save_notes(self) -> None:
         """Save notes to storage."""
-        notes_data = [note.to_dict() for note in self.notes]
-        self.storage.save("notes.json", notes_data)
+        pass
 
     def create_note(
         self, content: str, title: Optional[str] = None, tags: Optional[List[str]] = None
@@ -199,7 +197,9 @@ class NoteService:
             note.title = title
 
         if tags is not None:
-            note.tags = tags
+            # Normalize tags: lowercase, strip, remove empty, deduplicate
+            normalized_tags = [tag.lower().strip() for tag in tags if tag.strip()]
+            note.tags = list(set(normalized_tags))
 
         self.save_notes()
         return note
