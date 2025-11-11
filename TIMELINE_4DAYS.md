@@ -25,23 +25,23 @@
 - [ ] Запустити: `uv run pytest tests/test_notes.py -v`
 
 **Валідація (30 хв)** - Член команди 3
-- [ ] Прочитати `docs/VALIDATION_MODULE.md`
-- [ ] Почати `validators/validators.py`
-- [ ] Створити класи PhoneValidator та EmailValidator
+- [x] Прочитати `docs/VALIDATION_MODULE.md`
+- [x] Почати `validators/validators.py`
+- [x] Створити класи PhoneValidator та EmailValidator
 
 ### Обід (13:00 - 14:00)
 
 ### День (14:00 - 18:00) - 4 години
 
 **PhoneValidator (1 год)** - Член команди 3
-- [ ] Реалізувати валідацію українських номерів
-- [ ] Додати підтримку всіх форматів
-- [ ] Написати тести: `test_phone_validation.py`
+- [x] Реалізувати валідацію українських номерів
+- [x] Додати підтримку всіх форматів
+- [x] Написати тести: `test_phone_validation.py`
 
 **EmailValidator (1 год)** - Член команди 3
-- [ ] Реалізувати валідацію email
-- [ ] Додати перевірку поширених помилок
-- [ ] Написати тести
+- [x] Реалізувати валідацію email
+- [x] Додати перевірку поширених помилок
+- [x] Написати тести
 
 **FileStorage Початок (2 год)** - Всі разом
 - [ ] Прочитати `docs/STORAGE_MODULE.md`

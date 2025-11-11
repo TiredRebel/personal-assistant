@@ -34,6 +34,7 @@ class Contact:
         >>> print(contact.name)
         John Doe
     """
+
     name: str
     phone: str
     email: Optional[str] = None
@@ -70,7 +71,7 @@ class Contact:
             "phone": self.phone,
             "email": self.email,
             "address": self.address,
-            "birthday": self.birthday.isoformat() if self.birthday else None
+            "birthday": self.birthday.isoformat() if self.birthday else None,
         }
 
     @classmethod
@@ -99,7 +100,7 @@ class Contact:
             phone=data["phone"],
             email=data.get("email"),
             address=data.get("address"),
-            birthday=birthday
+            birthday=birthday,
         )
 
     def days_until_birthday(self) -> Optional[int]:

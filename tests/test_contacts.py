@@ -22,7 +22,7 @@ class TestContactModel:
             phone="+380501234567",
             email="john@example.com",
             address="123 Main St, Kyiv",
-            birthday=date(1990, 5, 15)
+            birthday=date(1990, 5, 15),
         )
 
         assert contact.name == "John Doe"
@@ -33,10 +33,7 @@ class TestContactModel:
 
     def test_contact_creation_minimal_fields(self) -> None:
         """Test creating contact with only required fields."""
-        contact = Contact(
-            name="Jane Smith",
-            phone="0501234567"
-        )
+        contact = Contact(name="Jane Smith", phone="0501234567")
 
         assert contact.name == "Jane Smith"
         assert contact.phone == "0501234567"
@@ -60,7 +57,7 @@ class TestContactModel:
             name="John Doe",
             phone="+380501234567",
             email="john@example.com",
-            birthday=date(1990, 5, 15)
+            birthday=date(1990, 5, 15),
         )
 
         data = contact.to_dict()
@@ -87,7 +84,7 @@ class TestContactModel:
             "phone": "+380501234567",
             "email": "john@example.com",
             "address": "123 Main St",
-            "birthday": "1990-05-15"
+            "birthday": "1990-05-15",
         }
 
         contact = Contact.from_dict(data)
@@ -99,10 +96,7 @@ class TestContactModel:
 
     def test_contact_from_dict_minimal(self) -> None:
         """Test deserialization with minimal fields."""
-        data = {
-            "name": "Jane",
-            "phone": "0501234567"
-        }
+        data = {"name": "Jane", "phone": "0501234567"}
 
         contact = Contact.from_dict(data)
 
@@ -116,11 +110,7 @@ class TestContactModel:
         today = date.today()
         future_date = date(today.year, 12, 31)
 
-        contact = Contact(
-            name="Test User",
-            phone="+380501234567",
-            birthday=future_date
-        )
+        contact = Contact(name="Test User", phone="+380501234567", birthday=future_date)
 
         days = contact.days_until_birthday()
         assert days is not None
@@ -128,10 +118,7 @@ class TestContactModel:
 
     def test_days_until_birthday_no_birthday(self) -> None:
         """Test that None is returned when no birthday set."""
-        contact = Contact(
-            name="Test User",
-            phone="+380501234567"
-        )
+        contact = Contact(name="Test User", phone="+380501234567")
 
         assert contact.days_until_birthday() is None
 
