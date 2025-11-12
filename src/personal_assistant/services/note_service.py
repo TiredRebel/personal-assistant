@@ -7,9 +7,7 @@ for note operations including creation, editing, deletion, searching, and tag ma
 from typing import List, Optional, Set
 
 from src.personal_assistant.models.note import Note
-
-# TODO uncomment when available
-# from src.personal_assistant.storage.file_storage import FileStorage
+from src.personal_assistant.storage.file_storage import FileStorage
 
 
 class NoteService:
@@ -23,9 +21,7 @@ class NoteService:
     - Tag management
     """
 
-    # TODO swap lines below when FileStorage is available
-    # def __init__(self, storage: FileStorage) -> None:
-    def __init__(self, storage) -> None:
+    def __init__(self, storage: FileStorage) -> None:
         """
         Initialize note service.
         Args:
@@ -37,13 +33,17 @@ class NoteService:
 
     def load_notes(self) -> None:
         """Load notes from storage."""
-        # TODO implement when storage is available
-        raise NotImplementedError
+        try:
+            notes_data = self.storage.load("notes.json")
+            self.notes = [Note.from_dict(data) for data in notes_data]
+        except Exception:
+            # If loading fails, start with empty list
+            self.notes = []
 
     def save_notes(self) -> None:
         """Save notes to storage."""
-        # TODO implement when storage is available
-        raise NotImplementedError
+        notes_data = [note.to_dict() for note in self.notes]
+        self.storage.save("notes.json", notes_data)
 
     def create_note(
         self, content: str, title: Optional[str] = None, tags: Optional[List[str]] = None
