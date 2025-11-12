@@ -69,3 +69,6 @@ Thumbs.db
 storage.log
 uv.lock
 setup.py
+QUICK_STORAGE_GUIDE.md
+CLI_QUICKSTART.md
+SIMPLIFICATION_REPORT.md
