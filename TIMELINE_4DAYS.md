@@ -13,16 +13,16 @@
 - [ ] Встановити залежності: `uv pip install -e ".[dev]"`
 
 **Модель Contact (1.5 год)** - Член команди 1
-- [ ] Прочитати `docs/CONTACTS_MODULE.md`
-- [ ] Завершити `models/contact.py` (вже є приклад)
-- [ ] Написати тести в `test_contacts.py`
-- [ ] Запустити: `uv run pytest tests/test_contacts.py -v`
+- [x] Прочитати `docs/CONTACTS_MODULE.md`
+- [x] Завершити `models/contact.py` (вже є приклад)
+- [x] Написати тести в `test_contacts.py`
+- [x] Запустити: `uv run pytest tests/test_contacts.py -v`
 
 **Модель Note (1.5 год)** - Член команди 2
-- [ ] Прочитати `docs/NOTES_MODULE.md`
-- [ ] Реалізувати `models/note.py`
-- [ ] Написати тести в `test_notes.py`
-- [ ] Запустити: `uv run pytest tests/test_notes.py -v`
+- [x] Прочитати `docs/NOTES_MODULE.md`
+- [x] Реалізувати `models/note.py`
+- [x] Написати тести в `test_notes.py`
+- [x] Запустити: `uv run pytest tests/test_notes.py -v`
 
 **Валідація (30 хв)** - Член команди 3
 - [x] Прочитати `docs/VALIDATION_MODULE.md`
