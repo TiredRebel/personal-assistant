@@ -270,8 +270,7 @@ class ContactService:
         upcoming = [
             (contact, days_until)
             for contact in self.contacts
-            if (days_until := contact.days_until_birthday()) is not None
-            and days_until <= days
+            if (days_until := contact.days_until_birthday()) is not None and days_until <= days
         ]
 
         # Sort by days_until (already calculated)

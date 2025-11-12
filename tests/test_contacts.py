@@ -123,13 +123,5 @@ class TestContactModel:
         assert contact.days_until_birthday() is None
 
 
-# TODO: Add tests for ContactService when implemented
-# - test_add_contact_valid_data()
-# - test_add_contact_invalid_phone()
-# - test_search_contacts_by_name()
-# - test_edit_contact_success()
-# - test_delete_contact_success()
-# - test_get_upcoming_birthdays()
-
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
