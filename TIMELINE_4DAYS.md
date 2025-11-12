@@ -75,9 +75,9 @@
 - [ ] Реалізувати get_contact_by_name()
 
 **NoteService Початок (1 год)** - Член команди 3
-- [ ] Реалізувати create_note()
-- [ ] Реалізувати search_notes()
-- [ ] Додати базову роботу з тегами
+- [x] Реалізувати create_note()
+- [x] Реалізувати search_notes()
+- [x] Додати базову роботу з тегами
 
 ### Обід (13:00 - 14:00)
 
@@ -90,11 +90,11 @@
 - [ ] Написати тести: `test_contact_service.py`
 
 **NoteService Завершення (2 год)** - Член команди 3
-- [ ] Реалізувати edit_note()
-- [ ] Реалізувати delete_note()
-- [ ] Реалізувати search_notes_by_tags()
-- [ ] Реалізувати get_all_tags()
-- [ ] Написати тести: `test_note_service.py`
+- [x] Реалізувати edit_note()
+- [x] Реалізувати delete_note()
+- [x] Реалізувати search_notes_by_tags()
+- [x] Реалізувати get_all_tags()
+- [x] Написати тести: `test_note_service.py`
 
 ### Вечір (18:00 - 19:00) - Integration Testing
 
