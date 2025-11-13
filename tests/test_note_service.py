@@ -27,14 +27,9 @@ class TestNoteService:
     @pytest.fixture
     def service(self, mock_storage):
         """Create a NoteService instance with mock storage."""
-        service = NoteService(mock_storage)
-        # Override load_notes to avoid NotImplementedError
-        service.load_notes = MagicMock()
-        service.save_notes = MagicMock()
-        service.notes = []
-        return service
+        return NoteService(mock_storage)
 
-    def test_create_note_success(self, service):
+    def test_create_note_success(self, service, mock_storage):
         """Test creating note with valid data."""
         note = service.create_note(
             content="Test content", title="Test Title", tags=["test", "demo"]
@@ -45,7 +40,7 @@ class TestNoteService:
         assert "test" in note.tags
         assert "demo" in note.tags
         assert len(service.notes) == 1
-        assert service.save_notes.called
+        assert mock_storage.save.called
 
     def test_create_note_empty_content(self, service):
         """Test that empty content raises ValueError."""
