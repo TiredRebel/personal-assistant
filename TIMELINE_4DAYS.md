@@ -7,10 +7,10 @@
 ### Ранок (9:00 - 13:00) - 4 години
 
 **Team Setup (30 хв)**
-- [ ] Встановити uv: `curl -LsSf https://astral.sh/uv/install.sh | sh`
-- [ ] Клонувати проект
-- [ ] Запустити: `uv venv && source .venv/bin/activate`
-- [ ] Встановити залежності: `uv pip install -e ".[dev]"`
+- [x] Встановити uv: `curl -LsSf https://astral.sh/uv/install.sh | sh`
+- [x] Клонувати проект
+- [x] Запустити: `uv venv && source .venv/bin/activate`
+- [x] Встановити залежності: `uv pip install -e ".[dev]"`
 
 **Модель Contact (1.5 год)** - Член команди 1
 - [x] Прочитати `docs/CONTACTS_MODULE.md`
@@ -113,18 +113,18 @@
 ### Ранок (9:00 - 13:00) - 4 години
 
 **CLI Структура (1.5 год)** - Член команди 1
-- [ ] Прочитати `docs/CLI_MODULE.md`
-- [ ] Створити клас CLI в `cli/interface.py`
+- [x] Прочитати `docs/CLI_MODULE.md`
+- [x] Створити клас CLI в `cli/interface.py`
 - [ ] Реалізувати main menu
 - [ ] Реалізувати command registry
 
 **Команди контактів (1.5 год)** - Член команди 1
-- [ ] add_contact()
-- [ ] search_contact()
-- [ ] list_contacts()
-- [ ] edit_contact()
-- [ ] delete_contact()
-- [ ] show_birthdays()
+- [x] add_contact()
+- [x] search_contact()
+- [x] list_contacts()
+- [x] edit_contact()
+- [x] delete_contact()
+- [x] show_birthdays()
 
 **CommandParser Початок (1 год)** - Член команди 2
 - [ ] Прочитати `docs/INTELLIGENCE_MODULE.md`
@@ -136,13 +136,13 @@
 ### День (14:00 - 18:00) - 4 години
 
 **Команди нотаток (1.5 год)** - Член команди 1
-- [ ] add_note()
-- [ ] search_note()
-- [ ] list_notes()
-- [ ] edit_note()
-- [ ] delete_note()
-- [ ] search_by_tag()
-- [ ] list_tags()
+- [x] add_note()
+- [x] search_note()
+- [x] list_notes()
+- [x] edit_note()
+- [x] delete_note()
+- [x] search_notes_by_tag()
+- [x] list_all_tags()
 
 **CommandParser Завершення (1.5 год)** - Член команди 2
 - [ ] Реалізувати fuzzy matching
@@ -151,7 +151,7 @@
 - [ ] Написати тести: `test_command_parser.py`
 
 **Інтеграція (1 год)** - Всі разом
-- [ ] З'єднати CLI з сервісами
+- [x] З'єднати CLI з сервісами
 - [ ] З'єднати CommandParser з CLI
 - [ ] Оновити main.py для запуску
 
