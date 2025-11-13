@@ -128,11 +128,3 @@ class Contact:
             next_birthday = date(today.year + 1, self.birthday.month, self.birthday.day)
 
         return (next_birthday - today).days
-
-
-# TODO: Implement ContactService class (see docs/CONTACTS_MODULE.md)
-# The service class will handle:
-# - Adding contacts with validation
-# - Searching contacts
-# - Editing and deleting contacts
-# - Birthday reminders

@@ -12,24 +12,21 @@ import logging
 import os
 import shutil
 import tempfile
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any, Optional
 
 
 class StorageError(Exception):
     """Base exception for storage errors."""
-    pass
 
 
 class CorruptedDataError(StorageError):
     """Raised when data file is corrupted."""
-    pass
 
 
 class BackupNotFoundError(StorageError):
     """Raised when backup file is not found."""
-    pass
 
 
 class DateTimeEncoder(json.JSONEncoder):
@@ -37,8 +34,6 @@ class DateTimeEncoder(json.JSONEncoder):
 
     def default(self, o: Any) -> Any:
         """Convert datetime objects to ISO format strings."""
-        from datetime import date, datetime
-
         if isinstance(o, (date, datetime)):
             return o.isoformat()
         return super().default(o)
@@ -64,11 +59,11 @@ class FileStorage:
         """
         if base_dir is None:
             # Use user's home directory
-            base_dir = Path.home() / '.personal_assistant'
+            base_dir = Path.home() / ".personal_assistant"
 
         self.base_dir = Path(base_dir)
-        self.backup_dir = self.base_dir / 'backups'
-        self.log_file = self.base_dir / 'storage.log'
+        self.backup_dir = self.base_dir / "backups"
+        self.log_file = self.base_dir / "storage.log"
 
         # Create directories if they don't exist
         self.base_dir.mkdir(parents=True, exist_ok=True)
@@ -80,13 +75,13 @@ class FileStorage:
     def _setup_logging(self) -> None:
         """Setup logging for storage operations."""
         # Create logger
-        self.logger = logging.getLogger('FileStorage')
+        self.logger = logging.getLogger("FileStorage")
         self.logger.setLevel(logging.INFO)
 
         # Avoid duplicate handlers
         if not self.logger.handlers:
             # File handler
-            file_handler = logging.FileHandler(self.log_file, encoding='utf-8')
+            file_handler = logging.FileHandler(self.log_file, encoding="utf-8")
             file_handler.setLevel(logging.INFO)
 
             # Console handler
@@ -94,9 +89,7 @@ class FileStorage:
             console_handler.setLevel(logging.WARNING)
 
             # Formatter
-            formatter = logging.Formatter(
-                '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-            )
+            formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
             file_handler.setFormatter(formatter)
             console_handler.setFormatter(formatter)
 
@@ -129,21 +122,17 @@ class FileStorage:
 
             # Serialize data to JSON
             json_data = json.dumps(
-                data,
-                cls=DateTimeEncoder,
-                indent=2,
-                ensure_ascii=False,
-                sort_keys=True
+                data, cls=DateTimeEncoder, indent=2, ensure_ascii=False, sort_keys=True
             )
 
             # Atomic write
             self._atomic_write(filepath, json_data)
 
-            self.logger.info(f"Successfully saved {len(data)} items to {filename}")
+            self.logger.info("Successfully saved %d items to %s", len(data), filename)
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to save {filename}: {str(e)}")
+            self.logger.error("Failed to save %s: %s", filename, str(e))
             return False
 
     def load(self, filename: str) -> list[dict[str, Any]]:
@@ -161,23 +150,23 @@ class FileStorage:
         try:
             # Check if file exists
             if not filepath.exists():
-                self.logger.info(f"File {filename} does not exist, returning empty list")
+                self.logger.info("File %s does not exist, returning empty list", filename)
                 return []
 
             # Read and parse JSON
-            with open(filepath, 'r', encoding='utf-8') as f:
+            with open(filepath, "r", encoding="utf-8") as f:
                 data: list[dict[str, Any]] = json.load(f)
 
-            self.logger.info(f"Successfully loaded {len(data)} items from {filename}")
+            self.logger.info("Successfully loaded %d items from %s", len(data), filename)
             return data
 
         except json.JSONDecodeError as e:
-            self.logger.error(f"Corrupted data in {filename}: {str(e)}")
+            self.logger.error("Corrupted data in %s: %s", filename, str(e))
             # Attempt recovery from backup
             return self._recover_from_corruption(filename)
 
         except Exception as e:
-            self.logger.error(f"Failed to load {filename}: {str(e)}")
+            self.logger.error("Failed to load %s: %s", filename, str(e))
             return []
 
     def _atomic_write(self, filepath: Path, data: str) -> None:
@@ -195,14 +184,12 @@ class FileStorage:
 
         # Create temp file in same directory (ensures same filesystem)
         temp_fd, temp_path = tempfile.mkstemp(
-            dir=temp_dir,
-            prefix=f'.{filepath.name}.',
-            suffix='.tmp'
+            dir=temp_dir, prefix=f".{filepath.name}.", suffix=".tmp"
         )
 
         try:
             # Write data to temp file
-            with os.fdopen(temp_fd, 'w', encoding='utf-8') as f:
+            with os.fdopen(temp_fd, "w", encoding="utf-8") as f:
                 f.write(data)
                 f.flush()
                 os.fsync(f.fileno())  # Force write to disk
@@ -236,13 +223,13 @@ class FileStorage:
         try:
             # Check if source file exists
             if not source_path.exists():
-                self.logger.warning(f"Cannot backup {filename}: file does not exist")
+                self.logger.warning("Cannot backup %s: file does not exist", filename)
                 return False
 
             # Generate backup filename with timestamp
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            base_name = filename.rsplit('.', 1)[0]  # Remove extension
-            extension = filename.rsplit('.', 1)[1] if '.' in filename else ''
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            base_name = filename.rsplit(".", 1)[0]  # Remove extension
+            extension = filename.rsplit(".", 1)[1] if "." in filename else ""
 
             if extension:
                 backup_filename = f"{base_name}_{timestamp}.{extension}"
@@ -254,7 +241,7 @@ class FileStorage:
             # Copy file to backup directory
             shutil.copy2(source_path, backup_path)
 
-            self.logger.info(f"Created backup: {backup_filename}")
+            self.logger.info("Created backup: %s", backup_filename)
 
             # Clean old backups
             self.delete_old_backups(filename, keep_count=10)
@@ -262,14 +249,10 @@ class FileStorage:
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to create backup for {filename}: {str(e)}")
+            self.logger.error("Failed to create backup for %s: %s", filename, str(e))
             return False
 
-    def restore_from_backup(
-        self,
-        filename: str,
-        backup_time: Optional[datetime] = None
-    ) -> bool:
+    def restore_from_backup(self, filename: str, backup_time: Optional[datetime] = None) -> bool:
         """
         Restore a file from backup.
 
@@ -284,7 +267,7 @@ class FileStorage:
             backups = self.list_backups(filename)
 
             if not backups:
-                self.logger.error(f"No backups found for {filename}")
+                self.logger.error("No backups found for %s", filename)
                 return False
 
             # Find the appropriate backup
@@ -296,27 +279,27 @@ class FileStorage:
                 # Find backup matching timestamp
                 found_backup: dict[str, Any] | None = None
                 for backup in backups:
-                    if backup['timestamp'] == backup_time:
+                    if backup["timestamp"] == backup_time:
                         found_backup = backup
                         break
 
                 if found_backup is None:
-                    self.logger.error(f"Backup not found for timestamp {backup_time}")
+                    self.logger.error("Backup not found for timestamp %s", backup_time)
                     return False
 
                 backup_info = found_backup
 
             # Copy backup to main location
-            backup_path = self.backup_dir / backup_info['filename']
+            backup_path = self.backup_dir / backup_info["filename"]
             target_path = self.base_dir / filename
 
             shutil.copy2(backup_path, target_path)
 
-            self.logger.info(f"Restored {filename} from backup {backup_info['filename']}")
+            self.logger.info("Restored %s from backup %s", filename, backup_info["filename"])
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to restore {filename} from backup: {str(e)}")
+            self.logger.error("Failed to restore %s from backup: %s", filename, str(e))
             return False
 
     def list_backups(self, filename: str) -> list[dict[str, Any]]:
@@ -329,7 +312,7 @@ class FileStorage:
         Returns:
             List of backup info (filename, timestamp, size), sorted by timestamp (newest first)
         """
-        base_name = filename.rsplit('.', 1)[0]
+        base_name = filename.rsplit(".", 1)[0]
 
         backups: list[dict[str, Any]] = []
 
@@ -340,34 +323,33 @@ class FileStorage:
                     # Parse timestamp from filename
                     # Format: basename_YYYYMMDD_HHMMSS.ext
                     try:
-                        name_parts = backup_file.stem.split('_')
+                        name_parts = backup_file.stem.split("_")
                         if len(name_parts) >= 3:
                             date_str = name_parts[-2]  # YYYYMMDD
                             time_str = name_parts[-1]  # HHMMSS
 
-                            timestamp = datetime.strptime(
-                                f"{date_str}_{time_str}",
-                                '%Y%m%d_%H%M%S'
-                            )
+                            timestamp = datetime.strptime(f"{date_str}_{time_str}", "%Y%m%d_%H%M%S")
 
                             # Get file size
                             size = backup_file.stat().st_size
 
-                            backups.append({
-                                'filename': backup_file.name,
-                                'timestamp': timestamp,
-                                'size': size,
-                                'size_mb': round(size / (1024 * 1024), 2)
-                            })
+                            backups.append(
+                                {
+                                    "filename": backup_file.name,
+                                    "timestamp": timestamp,
+                                    "size": size,
+                                    "size_mb": round(size / (1024 * 1024), 2),
+                                }
+                            )
                     except (ValueError, IndexError):
                         # Skip files that don't match expected format
                         continue
 
             # Sort by timestamp (newest first)
-            backups.sort(key=lambda x: x['timestamp'], reverse=True)
+            backups.sort(key=lambda x: x["timestamp"], reverse=True)
 
         except Exception as e:
-            self.logger.error(f"Failed to list backups for {filename}: {str(e)}")
+            self.logger.error("Failed to list backups for %s: %s", filename, str(e))
 
         return backups
 
@@ -384,12 +366,12 @@ class FileStorage:
 
             # Delete backups beyond keep_count
             for backup in backups[keep_count:]:
-                backup_path = self.backup_dir / backup['filename']
+                backup_path = self.backup_dir / backup["filename"]
                 backup_path.unlink()
-                self.logger.info(f"Deleted old backup: {backup['filename']}")
+                self.logger.info("Deleted old backup: %s", backup["filename"])
 
         except Exception as e:
-            self.logger.error(f"Failed to delete old backups for {filename}: {str(e)}")
+            self.logger.error("Failed to delete old backups for %s: %s", filename, str(e))
 
     def _recover_from_corruption(self, filename: str) -> list[dict[str, Any]]:
         """
@@ -401,31 +383,31 @@ class FileStorage:
         Returns:
             Recovered data or empty list
         """
-        self.logger.warning(f"Attempting to recover corrupted file: {filename}")
+        self.logger.warning("Attempting to recover corrupted file: %s", filename)
 
         # Try to restore from latest backup
         backups = self.list_backups(filename)
 
         for backup in backups:
             try:
-                self.logger.info(f"Trying backup: {backup['filename']}")
+                self.logger.info("Trying backup: %s", backup["filename"])
 
                 # Try to load and validate backup
-                backup_path = self.backup_dir / backup['filename']
-                with open(backup_path, 'r', encoding='utf-8') as f:
+                backup_path = self.backup_dir / backup["filename"]
+                with open(backup_path, "r", encoding="utf-8") as f:
                     data: list[dict[str, Any]] = json.load(f)
 
                 # If successful, restore from this backup
-                if self.restore_from_backup(filename, backup['timestamp']):
-                    self.logger.info(f"Successfully recovered from backup: {backup['filename']}")
+                if self.restore_from_backup(filename, backup["timestamp"]):
+                    self.logger.info("Successfully recovered from backup: %s", backup["filename"])
                     return data
 
             except Exception as e:
-                self.logger.warning(f"Backup {backup['filename']} also corrupted: {str(e)}")
+                self.logger.warning("Backup %s also corrupted: %s", backup["filename"], str(e))
                 continue
 
         # All recovery attempts failed
-        self.logger.error(f"All recovery attempts failed for {filename}")
+        self.logger.error("All recovery attempts failed for %s", filename)
         return []
 
     def export_data(self, export_path: Path) -> bool:
@@ -443,26 +425,26 @@ class FileStorage:
             export_path.mkdir(parents=True, exist_ok=True)
 
             # Copy all JSON files
-            for file in self.base_dir.glob('*.json'):
+            for file in self.base_dir.glob("*.json"):
                 shutil.copy2(file, export_path / file.name)
-                self.logger.info(f"Exported {file.name}")
+                self.logger.info("Exported %s", file.name)
 
             # Create export manifest
             manifest = {
-                'export_date': datetime.now().isoformat(),
-                'files': [f.name for f in export_path.glob('*.json')],
-                'version': '1.0.0'
+                "export_date": datetime.now().isoformat(),
+                "files": [f.name for f in export_path.glob("*.json")],
+                "version": "1.0.0",
             }
 
-            manifest_path = export_path / 'export_manifest.json'
-            with open(manifest_path, 'w', encoding='utf-8') as f:
+            manifest_path = export_path / "export_manifest.json"
+            with open(manifest_path, "w", encoding="utf-8") as f:
                 json.dump(manifest, f, indent=2, ensure_ascii=False)
 
-            self.logger.info(f"Export completed successfully to {export_path}")
+            self.logger.info("Export completed successfully to %s", export_path)
             return True
 
         except Exception as e:
-            self.logger.error(f"Export failed: {str(e)}")
+            self.logger.error("Export failed: %s", str(e))
             return False
 
     def import_data(self, import_path: Path) -> bool:
@@ -479,28 +461,28 @@ class FileStorage:
             import_path = Path(import_path)
 
             if not import_path.exists():
-                self.logger.error(f"Import path does not exist: {import_path}")
+                self.logger.error("Import path does not exist: %s", import_path)
                 return False
 
             # Create backups of current data
-            for file in self.base_dir.glob('*.json'):
+            for file in self.base_dir.glob("*.json"):
                 self.create_backup(file.name)
 
             # Copy imported files
-            for file in import_path.glob('*.json'):
-                if file.name != 'export_manifest.json':
+            for file in import_path.glob("*.json"):
+                if file.name != "export_manifest.json":
                     target_path = self.base_dir / file.name
 
                     # Validate JSON before copying
-                    with open(file, 'r', encoding='utf-8') as f:
+                    with open(file, "r", encoding="utf-8") as f:
                         json.load(f)  # Validate JSON
 
                     shutil.copy2(file, target_path)
-                    self.logger.info(f"Imported {file.name}")
+                    self.logger.info("Imported %s", file.name)
 
-            self.logger.info(f"Import completed successfully from {import_path}")
+            self.logger.info("Import completed successfully from %s", import_path)
             return True
 
         except Exception as e:
-            self.logger.error(f"Import failed: {str(e)}")
+            self.logger.error("Import failed: %s", str(e))
             return False

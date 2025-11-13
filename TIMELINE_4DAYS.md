@@ -44,9 +44,9 @@
 - [x] Написати тести
 
 **FileStorage Початок (2 год)** - Всі разом
-- [ ] Прочитати `docs/STORAGE_MODULE.md`
-- [ ] Реалізувати базову структуру `storage/file_storage.py`
-- [ ] Реалізувати методи save() та load()
+- [x] Прочитати `docs/STORAGE_MODULE.md`
+- [x] Реалізувати базову структуру `storage/file_storage.py`
+- [x] Реалізувати методи save() та load()
 
 ### Вечір (18:00 - 19:00) - Code Review & Testing
 
@@ -64,15 +64,15 @@
 ### Ранок (9:00 - 13:00) - 4 години
 
 **FileStorage Завершення (1.5 год)** - Член команди 1
-- [ ] Реалізувати atomic write
-- [ ] Додати систему резервних копій
-- [ ] Реалізувати recovery механізм
-- [ ] Написати тести: `test_storage.py`
+- [x] Реалізувати atomic write
+- [x] Додати систему резервних копій
+- [x] Реалізувати recovery механізм
+- [x] Написати тести: `test_storage.py`
 
 **ContactService Початок (1.5 год)** - Член команди 2
-- [ ] Реалізувати add_contact() з валідацією
-- [ ] Реалізувати search_contacts()
-- [ ] Реалізувати get_contact_by_name()
+- [x] Реалізувати add_contact() з валідацією
+- [x] Реалізувати search_contacts()
+- [x] Реалізувати get_contact_by_name()
 
 **NoteService Початок (1 год)** - Член команди 3
 - [ ] Реалізувати create_note()
@@ -84,10 +84,10 @@
 ### День (14:00 - 18:00) - 4 години
 
 **ContactService Завершення (2 год)** - Член команди 2
-- [ ] Реалізувати edit_contact()
-- [ ] Реалізувати delete_contact()
-- [ ] Реалізувати get_upcoming_birthdays()
-- [ ] Написати тести: `test_contact_service.py`
+- [x] Реалізувати edit_contact()
+- [x] Реалізувати delete_contact()
+- [x] Реалізувати get_upcoming_birthdays()
+- [x] Написати тести: `test_contact_service.py`
 
 **NoteService Завершення (2 год)** - Член команди 3
 - [ ] Реалізувати edit_note()
