@@ -23,18 +23,18 @@ def print_header(title: str) -> None:
 def create_parser() -> argparse.ArgumentParser:
     """Створити парсер аргументів командного рядка."""
     parser = argparse.ArgumentParser(
-        prog='personal-assistant',
-        description='Personal Assistant - Керування контактами та нотатками',
-        epilog='Приклад: python -m personal_assistant.main --storage-info'
+        prog="personal-assistant",
+        description="Personal Assistant - Керування контактами та нотатками",
+        epilog="Приклад: python -m personal_assistant.main --storage-info",
     )
 
-    parser.add_argument('--storage-dir', type=Path, help='Директорія сховища')
-    parser.add_argument('--storage-info', action='store_true', help='Інформація про сховище')
-    parser.add_argument('--backup', metavar='FILE', help='Створити резервну копію файлу')
-    parser.add_argument('--list-backups', metavar='FILE', help='Список резервних копій')
-    parser.add_argument('--restore', metavar='FILE', help='Відновити з резервної копії')
-    parser.add_argument('--export', metavar='DIR', help='Експортувати дані')
-    parser.add_argument('--import', metavar='DIR', dest='import_dir', help='Імпортувати дані')
+    parser.add_argument("--storage-dir", type=Path, help="Директорія сховища")
+    parser.add_argument("--storage-info", action="store_true", help="Інформація про сховище")
+    parser.add_argument("--backup", metavar="FILE", help="Створити резервну копію файлу")
+    parser.add_argument("--list-backups", metavar="FILE", help="Список резервних копій")
+    parser.add_argument("--restore", metavar="FILE", help="Відновити з резервної копії")
+    parser.add_argument("--export", metavar="DIR", help="Експортувати дані")
+    parser.add_argument("--import", metavar="DIR", dest="import_dir", help="Імпортувати дані")
 
     return parser
 
@@ -46,7 +46,7 @@ def show_storage_info(storage: FileStorage) -> None:
     print(f"Резервні копії:  {storage.backup_dir}")
     print(f"Лог-файл:        {storage.log_file}")
 
-    data_files = sorted(storage.base_dir.glob('*.json'))
+    data_files = sorted(storage.base_dir.glob("*.json"))
     if not data_files:
         print("\nФайли даних не знайдено.")
         return
@@ -81,7 +81,7 @@ def list_backups(storage: FileStorage, filename: str) -> None:
 
     print_header(f"Резервні копії: {filename}")
     for i, backup in enumerate(backups, 1):
-        time_str = backup['timestamp'].strftime('%Y-%m-%d %H:%M:%S')
+        time_str = backup["timestamp"].strftime("%Y-%m-%d %H:%M:%S")
         print(f"{i:2}. {backup['filename']:<45} {time_str}")
 
 
@@ -112,7 +112,7 @@ def import_data(storage: FileStorage, path: str) -> None:
         return
 
     print("⚠ УВАГА: Поточні дані будуть замінені!")
-    if input("Продовжити? (yes/no): ").lower() != 'yes':
+    if input("Продовжити? (yes/no): ").lower() != "yes":
         print("Імпорт скасовано")
         return
 
