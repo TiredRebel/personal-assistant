@@ -25,6 +25,8 @@ classifiers = [
 
 dependencies = [
     "python-dateutil>=2.8.2",
+    "colorama>=0.4.6",
+    "pyreadline3>=3.5.0; sys_platform == 'win32'",
 ]
 
 [project.optional-dependencies]

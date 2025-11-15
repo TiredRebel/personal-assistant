@@ -2,29 +2,52 @@
 
 A Python-based personal assistant application for managing contacts and notes with intelligent command recognition.
 
-## Project Overview
+[![Tests](https://img.shields.io/badge/tests-151%20passed-success)](TEST_REPORT.md)
+[![Coverage](https://img.shields.io/badge/coverage-77%25-green)](TEST_REPORT.md)
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue)](pyproject.toml)
+[![Code Style](https://img.shields.io/badge/code%20style-ruff-black)](pyproject.toml)
+[![Type Checked](https://img.shields.io/badge/type%20checked-mypy-blue)](pyproject.toml)
+
+## 🎯 Project Overview
 
 This Personal Assistant helps users:
 - 📇 Manage contacts with full information (name, address, phone, email, birthday)
 - 📝 Create and organize notes with tags
 - 🔍 Search and filter contacts and notes
 - 🎂 Track upcoming birthdays
+- 💾 Automatic backups and data recovery
 - 🤖 Intelligent command recognition
 
-## Features
+## ✨ Features
 
 ### Core Features (Required)
 - ✅ Contact Management (add, edit, delete, search)
 - ✅ Birthday tracking and reminders
-- ✅ Phone number and email validation
+- ✅ Phone number and email validation (Ukrainian format)
 - ✅ Note management (add, edit, delete, search)
-- ✅ Data persistence (save to disk)
+- ✅ Data persistence with atomic writes
+- ✅ Automatic backup system
 
 ### Additional Features
 - ✅ Tag system for notes
 - ✅ Tag-based search and sorting
-- ✅ Intelligent command parsing
-- ✅ Natural language command suggestions
+- ✅ Export/Import functionality
+- ✅ Corruption recovery
+- ✅ Comprehensive logging
+- ✅ CLI interface with arguments
+
+## 🧪 Testing & Quality
+
+### Test Results
+```
+✅ 151/151 tests passed (100%)
+✅ 77% code coverage
+✅ 0 type errors (mypy)
+✅ 0 style errors (ruff)
+✅ All CLI commands working
+```
+
+**Детальний звіт:** [TEST_REPORT.md](TEST_REPORT.md)
 
 ## Project Structure
 

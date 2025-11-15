@@ -1,15 +1,28 @@
-from typing import Optional, Callable, Dict, List
 import os
 import sys
 from datetime import date
+from typing import Callable, Dict, List, Optional
 
 # Try to import colorama, but don't fail if not available
 try:
-    from colorama import init, Fore, Style  # type: ignore[import-untyped]
+    from colorama import Fore, Style, init  # type: ignore[import-untyped]
 
     COLORAMA_AVAILABLE = True
 except ImportError:
     COLORAMA_AVAILABLE = False
+
+# Try to import readline for command completion (Windows: pyreadline3, Unix: readline)
+try:
+    import readline
+
+    READLINE_AVAILABLE = True
+except ImportError:
+    try:
+        import pyreadline3 as readline  # type: ignore[import-untyped]
+
+        READLINE_AVAILABLE = True
+    except ImportError:
+        READLINE_AVAILABLE = False
 
 
 class CLI:
@@ -40,6 +53,44 @@ class CLI:
 
         # Command registry
         self.commands: Dict[str, Callable] = self._register_commands()
+
+        # Setup command completion
+        self._setup_command_completion()
+
+    def _setup_command_completion(self) -> None:
+        """Setup readline command completion if available."""
+        if READLINE_AVAILABLE:
+            # Get all command names for completion
+            command_names = sorted(list(self.commands.keys()))
+
+            def completer(text: str, state: int) -> Optional[str]:
+                """Autocomplete function for readline."""
+                # If text is empty, show all commands
+                if not text:
+                    options = command_names
+                else:
+                    # Find commands that start with the text (case-insensitive)
+                    text_lower = text.lower()
+                    options = [cmd for cmd in command_names if cmd.lower().startswith(text_lower)]
+                
+                # Return the option at the given state index
+                if state < len(options):
+                    return options[state]
+                return None
+
+            readline.set_completer(completer)
+            
+            # Configure readline behavior
+            # Use tab for completion, show all options on double-tab
+            if sys.platform == "win32":
+                readline.parse_and_bind("tab: complete")
+            else:
+                readline.parse_and_bind("tab: complete")
+                # On Unix, also enable menu-complete for cycling through options
+                readline.parse_and_bind("set show-all-if-ambiguous on")
+            
+            # Set word delimiters (don't break on hyphens)
+            readline.set_completer_delims(" \t\n")
 
     def _register_commands(self) -> Dict[str, Callable]:
         """

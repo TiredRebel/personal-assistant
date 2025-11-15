@@ -145,15 +145,19 @@ def main() -> None:
         import_data(storage, args.import_dir)
     else:
         # Інтерактивний режим
-        print_header("Personal Assistant")
-        print("Доступні команди:")
-        print("  --storage-info              - Інформація про сховище")
-        print("  --backup FILE               - Створити резервну копію")
-        print("  --list-backups FILE         - Список резервних копій")
-        print("  --restore FILE              - Відновити з копії")
-        print("  --export DIR                - Експортувати дані")
-        print("  --import DIR                - Імпортувати дані")
-        print("\nВикористання: python -m personal_assistant.main --help")
+        from personal_assistant.cli.command_parser import CommandParser
+        from personal_assistant.cli.interface import CLI
+        from personal_assistant.services.contact_service import ContactService
+        from personal_assistant.services.note_service import NoteService
+
+        # Ініціалізація сервісів
+        contact_service = ContactService(storage)
+        note_service = NoteService(storage)
+        command_parser = CommandParser()
+
+        # Запуск CLI
+        cli = CLI(contact_service, note_service, command_parser)
+        cli.start()
 
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@ python-dateutil>=2.8.2  # Advanced date parsing and manipulation
 
 # Optional dependencies for enhanced features
 colorama>=0.4.6  # Colored terminal output (Windows compatibility)
+pyreadline3>=3.5.0; sys_platform == 'win32'  # Tab completion for Windows
 
 # Development dependencies (for testing and code quality)
 pytest>=7.4.0  # Unit testing framework
