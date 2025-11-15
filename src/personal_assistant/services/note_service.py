@@ -6,8 +6,8 @@ for note operations including creation, editing, deletion, searching, and tag ma
 
 from typing import List, Optional, Set
 
-from src.personal_assistant.models.note import Note
-from src.personal_assistant.storage.file_storage import FileStorage
+from personal_assistant.models import Note
+from personal_assistant.storage import FileStorage
 
 
 class NoteService:

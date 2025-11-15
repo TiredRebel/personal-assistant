@@ -9,8 +9,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from src.personal_assistant.models.note import Note
-from src.personal_assistant.services.note_service import NoteService
+from personal_assistant.models import Note
+from personal_assistant.services import NoteService
 
 
 class TestNoteService:

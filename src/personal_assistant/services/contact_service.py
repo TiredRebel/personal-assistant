@@ -10,9 +10,9 @@ from __future__ import annotations
 from datetime import date
 from typing import List, Optional
 
-from src.personal_assistant.models.contact import Contact
-from src.personal_assistant.storage.file_storage import FileStorage
-from src.personal_assistant.validators.validators import (
+from personal_assistant.models import Contact
+from personal_assistant.storage import FileStorage
+from personal_assistant.validators import (
     EmailValidator,
     PhoneValidator,
     ValidationError,
