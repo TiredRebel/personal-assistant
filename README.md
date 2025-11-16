@@ -2,8 +2,8 @@
 
 A Python-based personal assistant application for managing contacts and notes with intelligent command recognition.
 
-[![Tests](https://img.shields.io/badge/tests-151%20passed-success)](TEST_REPORT.md)
-[![Coverage](https://img.shields.io/badge/coverage-77%25-green)](TEST_REPORT.md)
+[![Tests](https://img.shields.io/badge/tests-316%20passed-success)](TEST_REPORT.md)
+[![Coverage](https://img.shields.io/badge/coverage-81%25-green)](TEST_REPORT.md)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue)](pyproject.toml)
 [![Code Style](https://img.shields.io/badge/code%20style-ruff-black)](pyproject.toml)
 [![Type Checked](https://img.shields.io/badge/type%20checked-mypy-blue)](pyproject.toml)
@@ -40,8 +40,8 @@ This Personal Assistant helps users:
 
 ### Test Results
 ```
-✅ 151/151 tests passed (100%)
-✅ 77% code coverage
+✅ 316/316 tests passed (100%)
+✅ 81% code coverage
 ✅ 0 type errors (mypy)
 ✅ 0 style errors (ruff)
 ✅ All CLI commands working
@@ -111,6 +111,12 @@ cd personal-assistant
 # Setup and install
 uv venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
+uv pip install -e .
+
+# For colored output (optional)
+uv pip install -e ".[colors]"
+
+# For development (includes testing tools)
 uv pip install -e ".[dev]"
 
 # Run the assistant
@@ -127,7 +133,11 @@ uv run personal-assistant
 
 ## Team Members
 
-- [Add team member names and roles]
+- **Dmytro** (TiredRebel)
+- **Oleksandr** (Ponomaleks)
+- **Vitalii** (ynot99)
+- **Denys** (Bliznyuk)
+- **Daniel** (kassimuss)
 
 ## License
 
