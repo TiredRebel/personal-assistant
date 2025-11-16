@@ -12,7 +12,7 @@ from typing import Any
 
 import pytest
 
-from src.personal_assistant.storage.file_storage import DateTimeEncoder, FileStorage
+from personal_assistant.storage import DateTimeEncoder, FileStorage
 
 
 class TestFileStorage:
