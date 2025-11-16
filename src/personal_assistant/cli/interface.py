@@ -72,14 +72,14 @@ class CLI:
                     # Find commands that start with the text (case-insensitive)
                     text_lower = text.lower()
                     options = [cmd for cmd in command_names if cmd.lower().startswith(text_lower)]
-                
+
                 # Return the option at the given state index
                 if state < len(options):
                     return options[state]
                 return None
 
             readline.set_completer(completer)
-            
+
             # Configure readline behavior
             # Use tab for completion, show all options on double-tab
             if sys.platform == "win32":
@@ -88,7 +88,7 @@ class CLI:
                 readline.parse_and_bind("tab: complete")
                 # On Unix, also enable menu-complete for cycling through options
                 readline.parse_and_bind("set show-all-if-ambiguous on")
-            
+
             # Set word delimiters (don't break on hyphens)
             readline.set_completer_delims(" \t\n")
 
@@ -137,8 +137,7 @@ class CLI:
 
         while self.running:
             try:
-                self.show_main_menu()
-                command = input("\nEnter command: ").strip()
+                command = input(self.get_prompt()).strip()
 
                 if not command:
                     continue
@@ -962,6 +961,15 @@ class CLI:
         """
         return input(f"\n{prompt} (yes/no): ").strip().lower() in {"yes", "y"}
 
+    def get_prompt(self) -> str:
+        """
+        Get the command prompt string.
+
+        Returns:
+            The prompt string to display
+        """
+        return "\nEnter command: "
+
 
 class ColoredCLI(CLI):
     """
@@ -1000,3 +1008,19 @@ class ColoredCLI(CLI):
             print(f"{self.Fore.YELLOW}⚠ {message}{self.Style.RESET_ALL}")
         else:
             super().show_warning(message)
+
+    def get_prompt(self) -> str:
+        """
+        Get the command prompt string with color.
+
+        Returns:
+            The colored prompt string to display
+        """
+        if self.colors_enabled:
+            # Wrap ANSI codes in \001 and \002 for readline compatibility
+            # This tells readline these are non-printing characters
+            cyan = f"\001{self.Fore.CYAN}\002"
+            reset = f"\001{self.Style.RESET_ALL}\002"
+            return f"\n{cyan}Enter command:{reset} "
+        else:
+            return super().get_prompt()
