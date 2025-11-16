@@ -1,7 +1,7 @@
 import os
 import sys
 from datetime import date
-from typing import Callable, Dict, List, Optional, Any
+from typing import Any, Callable, Dict, List, Optional
 
 # Try to import colorama, but don't fail if not available
 try:
@@ -146,7 +146,7 @@ class CLI:
 
         while self.running:
             try:
-                command = input("\nEnter command: ").strip()
+                command = input(self.get_prompt()).strip()
 
                 if not command:
                     continue
@@ -970,6 +970,15 @@ class CLI:
         """
         return input(f"\n{prompt} (yes/no): ").strip().lower() in {"yes", "y"}
 
+    def get_prompt(self) -> str:
+        """
+        Get the command prompt string.
+
+        Returns:
+            The prompt string to display
+        """
+        return "\nEnter command: "
+
 
 class ColoredCLI(CLI):
     """
@@ -1008,3 +1017,19 @@ class ColoredCLI(CLI):
             print(f"{self.Fore.YELLOW}⚠ {message}{self.Style.RESET_ALL}")
         else:
             super().show_warning(message)
+
+    def get_prompt(self) -> str:
+        """
+        Get the command prompt string with color.
+
+        Returns:
+            The colored prompt string to display
+        """
+        if self.colors_enabled:
+            # Wrap ANSI codes in \001 and \002 for readline compatibility
+            # This tells readline these are non-printing characters
+            cyan = f"\001{self.Fore.CYAN}\002"
+            reset = f"\001{self.Style.RESET_ALL}\002"
+            return f"\n{cyan}Enter command:{reset} "
+        else:
+            return super().get_prompt()

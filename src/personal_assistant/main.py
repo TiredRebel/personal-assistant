@@ -146,7 +146,7 @@ def main() -> None:
     else:
         # Інтерактивний режим
         from personal_assistant.cli.command_parser import CommandParser
-        from personal_assistant.cli.interface import CLI
+        from personal_assistant.cli.interface import CLI, COLORAMA_AVAILABLE, ColoredCLI
         from personal_assistant.services.contact_service import ContactService
         from personal_assistant.services.note_service import NoteService
 
@@ -156,7 +156,10 @@ def main() -> None:
         command_parser = CommandParser()
 
         # Запуск CLI
-        cli = CLI(contact_service, note_service, command_parser)
+        if COLORAMA_AVAILABLE:
+            cli = ColoredCLI(contact_service, note_service, command_parser)
+        else:
+            cli = CLI(contact_service, note_service, command_parser)
         cli.start()
 
 
