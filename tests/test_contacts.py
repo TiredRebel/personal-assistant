@@ -9,7 +9,7 @@ from datetime import date
 
 import pytest
 
-from src.personal_assistant.models.contact import Contact
+from personal_assistant.models import Contact
 
 
 class TestContactModel:

@@ -9,7 +9,7 @@ from datetime import datetime
 
 import pytest
 
-from src.personal_assistant.models.note import Note
+from personal_assistant.models import Note
 
 
 class TestNoteModel:

@@ -7,7 +7,7 @@ Run with: pytest tests/test_validation.py
 
 import pytest
 
-from src.personal_assistant.validators.validators import (
+from personal_assistant.validators import (
     PhoneValidationError,
     PhoneValidator,
     EmailValidator,
