@@ -1,8 +1,7 @@
+from datetime import date
+from unittest.mock import Mock, patch
+
 import pytest
-from unittest.mock import Mock, MagicMock, patch, call
-from datetime import date, datetime
-import sys
-from io import StringIO
 
 from personal_assistant.cli.interface import CLI
 from personal_assistant.models.contact import Contact
@@ -239,10 +238,14 @@ class TestNoteCommands:
             Note(content="Test note 1", title="Title 1"),
             Note(content="Test note 2", title="Title 2"),
         ]
+        # Mock get_note_by_id to return None (no ID match)
+        mock_note_service.get_note_by_id.return_value = None
         mock_note_service.search_notes.return_value = mock_notes
 
         cli.search_note(args)
 
+        # Should try ID search first, then content search
+        mock_note_service.get_note_by_id.assert_called_once_with("test query")
         mock_note_service.search_notes.assert_called_once_with("test query")
 
     def test_list_notes(self, cli, mock_note_service):
@@ -933,10 +936,14 @@ class TestNoteSearchAndList:
         monkeypatch.setattr("builtins.input", lambda _: "test")
 
         mock_notes = [Note(content="Test note")]
+        # Mock get_note_by_id to return None (no ID match)
+        mock_note_service.get_note_by_id.return_value = None
         mock_note_service.search_notes.return_value = mock_notes
 
         cli.search_note()
 
+        # Should try ID search first, then content search
+        mock_note_service.get_note_by_id.assert_called_once_with("test")
         mock_note_service.search_notes.assert_called_once_with("test")
 
     def test_search_note_empty_query(self, cli, mock_note_service, monkeypatch, capsys):
@@ -992,4 +999,5 @@ class TestNoteSearchAndList:
         cli.list_all_tags()
 
         captured = capsys.readouterr()
+        assert "no tags" in captured.out.lower()
         assert "no tags" in captured.out.lower()
