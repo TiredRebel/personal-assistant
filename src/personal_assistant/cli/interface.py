@@ -576,7 +576,7 @@ class CLI:
 
     def search_note(self, args: Optional[Dict] = None) -> None:
         """
-        Search notes by content.
+        Search notes by content or ID.
 
         Args:
             args: Pre-parsed arguments (optional, may contain search query in values)
@@ -589,12 +589,20 @@ class CLI:
             query = " ".join(str(v) for v in args["values"])
 
         if not query:
-            query = input("Search query: ").strip()
+            query = input("Search query or ID: ").strip()
 
         if not query:
             self.show_error("Search query cannot be empty")
             return
 
+        # First try to find by exact ID match
+        note_by_id = self.note_service.get_note_by_id(query)
+        if note_by_id:
+            self.show_success("Found note by ID:")
+            self.display_notes_list([note_by_id])
+            return
+
+        # If not found by ID, search by content
         results = self.note_service.search_notes(query)
 
         if results:

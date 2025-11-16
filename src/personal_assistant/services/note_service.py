@@ -66,15 +66,18 @@ class NoteService:
 
     def get_note_by_id(self, note_id: str) -> Optional[Note]:
         """
-        Find a note by ID.
+        Find a note by ID (full or partial prefix).
+
         Args:
-            note_id: Note ID to search for
+            note_id: Note ID to search for (full UUID or prefix of at least 8 chars)
         Returns:
             Note if found, None otherwise
         """
-        for note in self.notes:
-            if note.id == note_id:
-                return note
+        # Support prefix matching for IDs (minimum 8 chars, like git)
+        if len(note_id) >= 8:
+            for note in self.notes:
+                if note.id.startswith(note_id):
+                    return note
 
         return None
 

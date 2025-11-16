@@ -120,6 +120,19 @@ class CommandParser:
             "commands",
             "what can you do",
         ],
+        "stats": [
+            "stats",
+            "statistics",
+            "show stats",
+            "show statistics",
+            "info",
+        ],
+        "clear": [
+            "clear",
+            "cls",
+            "clear screen",
+            "clean",
+        ],
         "exit": [
             "exit",
             "quit",

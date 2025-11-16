@@ -70,6 +70,72 @@ class TestNoteService:
         result = service.get_note_by_id("non-existent-id")
         assert result is None
 
+    def test_get_note_by_id_short_prefix(self, service):
+        """Test finding a note by short ID prefix (8 chars)."""
+        created_note = service.create_note(content="Test note for prefix search")
+        short_id = created_note.id[:8]
+
+        found_note = service.get_note_by_id(short_id)
+
+        assert found_note is not None
+        assert found_note.id == created_note.id
+        assert found_note.content == "Test note for prefix search"
+
+    def test_get_note_by_id_longer_prefix(self, service):
+        """Test finding a note by longer ID prefix (12+ chars)."""
+        created_note = service.create_note(content="Test note")
+
+        # Test with 12 characters
+        prefix_12 = created_note.id[:12]
+        found_12 = service.get_note_by_id(prefix_12)
+        assert found_12 is not None
+        assert found_12.id == created_note.id
+
+        # Test with 16 characters
+        prefix_16 = created_note.id[:16]
+        found_16 = service.get_note_by_id(prefix_16)
+        assert found_16 is not None
+        assert found_16.id == created_note.id
+
+    def test_get_note_by_id_prefix_too_short(self, service):
+        """Test that prefixes shorter than 8 chars are not found."""
+        created_note = service.create_note(content="Test note")
+
+        # Test with 7 characters - should not find
+        prefix_7 = created_note.id[:7]
+        found_7 = service.get_note_by_id(prefix_7)
+        assert found_7 is None
+
+        # Test with 4 characters - should not find
+        prefix_4 = created_note.id[:4]
+        found_4 = service.get_note_by_id(prefix_4)
+        assert found_4 is None
+
+    def test_get_note_by_id_full_id_via_prefix(self, service):
+        """Test that full ID still works with prefix matching logic."""
+        created_note = service.create_note(content="Test note")
+
+        # Full ID should work as it's a prefix of itself
+        found_note = service.get_note_by_id(created_note.id)
+
+        assert found_note is not None
+        assert found_note.id == created_note.id
+
+    def test_get_note_by_id_multiple_notes_unique_prefix(self, service):
+        """Test finding note by prefix when multiple notes exist."""
+        note1 = service.create_note(content="First note")
+        note2 = service.create_note(content="Second note")
+        note3 = service.create_note(content="Third note")
+
+        # Each short ID should find the correct note
+        found1 = service.get_note_by_id(note1.id[:8])
+        found2 = service.get_note_by_id(note2.id[:8])
+        found3 = service.get_note_by_id(note3.id[:8])
+
+        assert found1.id == note1.id
+        assert found2.id == note2.id
+        assert found3.id == note3.id
+
     def test_search_notes_by_content(self, service):
         """Test searching notes by content."""
         service.create_note(content="Python programming tips")
