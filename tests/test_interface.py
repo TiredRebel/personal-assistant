@@ -1,8 +1,7 @@
+from datetime import date
+from unittest.mock import Mock, patch
+
 import pytest
-from unittest.mock import Mock, MagicMock, patch, call
-from datetime import date, datetime
-import sys
-from io import StringIO
 
 from personal_assistant.cli.interface import CLI
 from personal_assistant.models.contact import Contact
@@ -239,6 +238,8 @@ class TestNoteCommands:
             Note(content="Test note 1", title="Title 1"),
             Note(content="Test note 2", title="Title 2"),
         ]
+        # Mock ID search to return None (not found by ID)
+        mock_note_service.get_note_by_id.return_value = None
         mock_note_service.search_notes.return_value = mock_notes
 
         cli.search_note(args)
@@ -933,6 +934,8 @@ class TestNoteSearchAndList:
         monkeypatch.setattr("builtins.input", lambda _: "test")
 
         mock_notes = [Note(content="Test note")]
+        # Mock ID search to return None (not found by ID)
+        mock_note_service.get_note_by_id.return_value = None
         mock_note_service.search_notes.return_value = mock_notes
 
         cli.search_note()

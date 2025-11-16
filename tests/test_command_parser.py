@@ -108,8 +108,10 @@ class TestCommandParser:
         assert result is not None
         assert type(result["args"]) is dict
         assert "values" in result["args"]
-        # Note: input is lowercased, so quoted text is also lowercased
-        assert "john doe" in result["args"]["values"]
+        # Note: original case is preserved for arguments
+        values = result["args"]["values"]
+        assert type(values) is list
+        assert values[0] == "John Doe"
 
     def test_extract_options(self, parser: CommandParser):
         """Test extracting command options."""
@@ -118,6 +120,91 @@ class TestCommandParser:
         assert type(result["args"]) is dict
         assert "phone" in result["args"]
         assert result["args"]["phone"] == "+380501234567"
+
+    def test_extract_quoted_option_values(self, parser: CommandParser):
+        """Test extracting options with quoted values."""
+        result = parser.parse('add contact --email "john@example.com"')
+        assert result is not None
+        assert type(result["args"]) is dict
+        assert "email" in result["args"]
+        assert result["args"]["email"] == "john@example.com"
+
+    def test_extract_multiple_options(self, parser: CommandParser):
+        """Test extracting multiple options."""
+        result = parser.parse('add contact --phone +380501234567 --email "test@example.com"')
+        assert result is not None
+        assert type(result["args"]) is dict
+        assert "phone" in result["args"]
+        assert "email" in result["args"]
+        assert result["args"]["phone"] == "+380501234567"
+        assert result["args"]["email"] == "test@example.com"
+
+    def test_command_word_filtering(self, parser: CommandParser):
+        """Test that command keywords are filtered from values."""
+        result = parser.parse('add contact John')
+        assert result is not None
+        assert type(result["args"]) is dict
+        assert "values" in result["args"]
+        values = result["args"]["values"]
+        # Should only contain "John", not "add" or "contact"
+        assert values == ["John"]
+        assert "add" not in values
+        assert "contact" not in values
+
+    def test_mixed_arguments_and_options(self, parser: CommandParser):
+        """Test combination of quoted args, unquoted args, and options."""
+        result = parser.parse(
+            'add contact "John Doe" --phone +380501234567 --email "john@example.com"'
+        )
+        assert result is not None
+        assert type(result["args"]) is dict
+        assert "values" in result["args"]
+        assert type(result["args"]["values"]) is list
+        assert result["args"]["values"][0] == "John Doe"
+        assert result["args"]["phone"] == "+380501234567"
+        assert result["args"]["email"] == "john@example.com"
+
+    def test_unquoted_and_quoted_mixed_values(self, parser: CommandParser):
+        """Test mix of quoted and unquoted values without options."""
+        result = parser.parse('add contact John "Doe Smith" test')
+        assert result is not None
+        assert type(result["args"]) is dict
+        assert "values" in result["args"]
+        values = result["args"]["values"]
+        # Command words filtered, values preserved
+        assert "John" in values
+        assert "Doe Smith" in values
+        assert "test" in values
+
+    def test_options_before_arguments(self, parser: CommandParser):
+        """Test that options can come before regular arguments."""
+        result = parser.parse(
+            'add contact --phone +380501234567 --email "john@example.com" "John Doe"'
+        )
+        assert result is not None
+        assert type(result["args"]) is dict
+        # Check that options are parsed correctly
+        assert "phone" in result["args"]
+        assert "email" in result["args"]
+        assert result["args"]["phone"] == "+380501234567"
+        assert result["args"]["email"] == "john@example.com"
+        # Check that regular arguments still work
+        assert "values" in result["args"]
+        assert type(result["args"]["values"]) is list
+        assert result["args"]["values"][0] == "John Doe"
+
+    def test_hyphenated_command_with_arguments(self, parser: CommandParser):
+        """Test that hyphenated commands work with arguments."""
+        result = parser.parse('add-contact "John Smith" +380501234567 john@smith.com')
+        assert result is not None
+        assert type(result["args"]) is dict
+        assert result["command"] == "add-contact"
+        assert "values" in result["args"]
+        values = result["args"]["values"]
+        assert type(values) is list
+        assert values[0] == "John Smith"
+        assert values[1] == "+380501234567"
+        assert values[2] == "john@smith.com"
 
     def test_suggest_commands_typo(self, parser: CommandParser):
         """Test command suggestions for typos."""

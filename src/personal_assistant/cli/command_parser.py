@@ -120,6 +120,19 @@ class CommandParser:
             "commands",
             "what can you do",
         ],
+        "stats": [
+            "stats",
+            "statistics",
+            "show stats",
+            "show statistics",
+            "info",
+        ],
+        "clear": [
+            "clear",
+            "cls",
+            "clear screen",
+            "clean",
+        ],
         "exit": [
             "exit",
             "quit",
@@ -142,6 +155,9 @@ class CommandParser:
         """
         command_map = {}
         for command, patterns in self.COMMAND_PATTERNS.items():
+            # Add the command name itself as a pattern
+            command_map[command.lower()] = command
+            # Add all the pattern aliases
             for pattern in patterns:
                 command_map[pattern.lower()] = command
         return command_map
@@ -156,23 +172,24 @@ class CommandParser:
         Returns:
             Dictionary with 'command' and 'args', or None if not recognized
         """
-        input_str = input_str.strip().lower()
+        input_str_original = input_str.strip()
+        input_str_lower = input_str_original.lower()
 
         # Try exact match first
-        if input_str in self.command_map:
-            return {"command": self.command_map[input_str], "args": {}}
+        if input_str_lower in self.command_map:
+            return {"command": self.command_map[input_str_lower], "args": {}}
 
         # Try fuzzy matching
-        command, confidence = self._fuzzy_match_command(input_str)
+        command, confidence = self._fuzzy_match_command(input_str_lower)
         if command and confidence > 0.7:
             return {
                 "command": command,
-                "args": self._extract_arguments(input_str),
+                "args": self._extract_arguments(input_str_original),
                 "confidence": confidence,
             }
 
         # Try natural language parsing
-        parsed = self._parse_natural_language(input_str)
+        parsed = self._parse_natural_language(input_str_lower)
         if parsed:
             return parsed
 
@@ -269,24 +286,61 @@ class CommandParser:
         """
         Extract arguments from command string.
 
+        Supports:
+        - Quoted arguments: "John Doe"
+        - Unquoted arguments: john, +380501234567
+        - Options: --phone +380501234567, --email "john@example.com"
+
+        Command keywords (add, contact, edit, etc.) are automatically filtered
+        out to prevent them from being treated as user data.
+
         Args:
             input_str: Command string
 
         Returns:
-            Dictionary of extracted arguments
+            Dictionary with 'values' (list of arguments in order) and options
         """
         args: Dict[str, ArgValue] = {}
 
-        # Extract quoted strings
-        quoted = re.findall(r'"([^"]*)"', input_str)
-        if quoted:
-            args["values"] = quoted
+        # Extract --options (supports both quoted and unquoted values)
+        option_pattern = r'--(\w+)\s+(?:"([^"]*)"|(\S+))'
+        for match in re.finditer(option_pattern, input_str):
+            option_key = match.group(1)
+            quoted_value = match.group(2)
+            unquoted_value = match.group(3)
 
-        # Extract options (--key value)
-        # Fixed regex: escape the hyphen or put it at the end of character class
-        options = re.findall(r"--(\w+)\s+([^\s\-]+)", input_str)
-        for key, value in options:
-            args[key] = value
+            # Use quoted value if present, otherwise unquoted value
+            option_value = quoted_value if quoted_value is not None else unquoted_value
+            args[option_key] = option_value
+
+            # Remove the option from input_str to avoid duplicates
+            input_str = input_str.replace(match.group(0), "", 1)
+
+        # Extract quoted strings or unquoted words
+        quoted_or_unquoted = re.findall(r'"([^"]*)"|(\S+)', input_str)
+
+        # Build command words set for filtering
+        command_words = set()
+
+        # Add command names (e.g., "add-contact")
+        for command in self.COMMAND_PATTERNS.keys():
+            command_words.add(command.lower())
+
+        # Add all words from pattern aliases (e.g., "add", "contact")
+        for patterns in self.COMMAND_PATTERNS.values():
+            for pattern in patterns:
+                command_words.update(pattern.lower().split())
+
+        # Collect values while filtering out command words
+        values: List[str] = []
+        for quoted, unquoted in quoted_or_unquoted:
+            value = quoted if quoted else unquoted
+            # Skip command words (case-insensitive check)
+            if value.lower() not in command_words:
+                values.append(value)
+
+        if values:
+            args["values"] = values
 
         return args
 

@@ -103,9 +103,7 @@ class SmartCommandParser(CommandParser):
             command_counts[cmd] = command_counts.get(cmd, 0) + 1
 
         # Sort by frequency (descending) and return top 5
-        sorted_commands = sorted(
-            command_counts.items(), key=lambda x: x[1], reverse=True
-        )
+        sorted_commands = sorted(command_counts.items(), key=lambda x: x[1], reverse=True)
 
         return [cmd for cmd, count in sorted_commands[:5]]
 
