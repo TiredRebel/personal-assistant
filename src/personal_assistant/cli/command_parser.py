@@ -155,6 +155,9 @@ class CommandParser:
         """
         command_map = {}
         for command, patterns in self.COMMAND_PATTERNS.items():
+            # Add the command name itself as a pattern
+            command_map[command.lower()] = command
+            # Add all the pattern aliases
             for pattern in patterns:
                 command_map[pattern.lower()] = command
         return command_map
@@ -318,6 +321,12 @@ class CommandParser:
 
         # Build command words set for filtering
         command_words = set()
+
+        # Add command names (e.g., "add-contact")
+        for command in self.COMMAND_PATTERNS.keys():
+            command_words.add(command.lower())
+
+        # Add all words from pattern aliases (e.g., "add", "contact")
         for patterns in self.COMMAND_PATTERNS.values():
             for pattern in patterns:
                 command_words.update(pattern.lower().split())

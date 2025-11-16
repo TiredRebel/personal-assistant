@@ -110,8 +110,8 @@ class TestCommandParser:
         assert "values" in result["args"]
         # Note: original case is preserved for arguments
         values = result["args"]["values"]
-        assert isinstance(values, list)
-        assert "John Doe" in values
+        assert type(values) is list
+        assert values[0] == "John Doe"
 
     def test_extract_options(self, parser: CommandParser):
         """Test extracting command options."""
@@ -159,7 +159,8 @@ class TestCommandParser:
         assert result is not None
         assert type(result["args"]) is dict
         assert "values" in result["args"]
-        assert "John Doe" in result["args"]["values"]
+        assert type(result["args"]["values"]) is list
+        assert result["args"]["values"][0] == "John Doe"
         assert result["args"]["phone"] == "+380501234567"
         assert result["args"]["email"] == "john@example.com"
 
@@ -189,7 +190,21 @@ class TestCommandParser:
         assert result["args"]["email"] == "john@example.com"
         # Check that regular arguments still work
         assert "values" in result["args"]
-        assert "John Doe" in result["args"]["values"]
+        assert type(result["args"]["values"]) is list
+        assert result["args"]["values"][0] == "John Doe"
+
+    def test_hyphenated_command_with_arguments(self, parser: CommandParser):
+        """Test that hyphenated commands work with arguments."""
+        result = parser.parse('add-contact "John Smith" +380501234567 john@smith.com')
+        assert result is not None
+        assert type(result["args"]) is dict
+        assert result["command"] == "add-contact"
+        assert "values" in result["args"]
+        values = result["args"]["values"]
+        assert type(values) is list
+        assert values[0] == "John Smith"
+        assert values[1] == "+380501234567"
+        assert values[2] == "john@smith.com"
 
     def test_suggest_commands_typo(self, parser: CommandParser):
         """Test command suggestions for typos."""
