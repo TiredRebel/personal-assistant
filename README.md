@@ -138,7 +138,3 @@ uv run personal-assistant
 - **Vitalii** (ynot99)
 - **Denys** (Bliznyuk)
 - **Daniel** (kassimuss)
-
-## License
-
-[Add license information]
