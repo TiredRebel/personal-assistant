@@ -11,9 +11,9 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from src.personal_assistant.models.contact import Contact
-from src.personal_assistant.services.contact_service import ContactService
-from src.personal_assistant.validators.validators import ValidationError
+from personal_assistant.models import Contact
+from personal_assistant.services import ContactService
+from personal_assistant.validators import ValidationError
 
 
 class TestContactService:
