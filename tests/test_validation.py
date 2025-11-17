@@ -8,10 +8,10 @@ Run with: pytest tests/test_validation.py
 import pytest
 
 from personal_assistant.validators import (
-    PhoneValidationError,
-    PhoneValidator,
     EmailValidator,
     InputValidator,
+    PhoneValidationError,
+    PhoneValidator,
 )
 
 

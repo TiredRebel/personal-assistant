@@ -512,7 +512,16 @@ class CLI:
             print(f"\nBirthdays in the next {days} days:")
             for contact in contacts:
                 days_until = contact.days_until_birthday()
-                print(f"  • {contact.name}: {days_until} day(s)")
+                # Calculate next birthday date
+                today = date.today()
+                next_birthday = date(today.year, contact.birthday.month, contact.birthday.day)
+                if next_birthday < today:
+                    next_birthday = date(
+                        today.year + 1, contact.birthday.month, contact.birthday.day
+                    )
+
+                birthday_str = next_birthday.strftime('%Y-%m-%d')
+                print(f"  • {contact.name}: {birthday_str} ({days_until} day(s))")
         else:
             self.show_warning(f"No birthdays in the next {days} days")
 
