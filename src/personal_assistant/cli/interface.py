@@ -3,6 +3,8 @@ import sys
 from datetime import date
 from typing import Any, Callable, Dict, List, Optional
 
+from personal_assistant.models import Note
+
 # Try to import colorama, but don't fail if not available
 try:
     from colorama import Fore, Style, init  # type: ignore[import-untyped]
@@ -608,7 +610,7 @@ class CLI:
         note_by_id = self.note_service.get_note_by_id(query)
         if note_by_id:
             self.show_success("Found note by ID:")
-            self.display_notes_list([note_by_id])
+            self.display_note(note_by_id)
             return
 
         # If not found by ID, search by content
@@ -616,7 +618,9 @@ class CLI:
 
         if results:
             self.show_success(f"Found {len(results)} note(s):")
-            self.display_notes_list(results)
+            for note in results:
+                self.display_note(note)
+                print()  # Add blank line between notes
         else:
             self.show_warning(f"No notes found matching '{query}'")
 
@@ -707,12 +711,12 @@ class CLI:
             email = contact.email or ""
             print(f"{contact.name:<25} {contact.phone:<20} {email:<30}")
 
-    def display_note(self, note) -> None:
+    def display_note(self, note: Note) -> None:
         """Display a single note details."""
         print(f"\nID:       {note.id[:8]}")
         if note.title:
             print(f"Title:    {note.title}")
-        print(f"Content:  {note.content[:100]}{'...' if len(note.content) > 100 else ''}")
+        print(f"Content:\n{note.content}")
         if note.tags:
             print(f"Tags:     {', '.join(note.tags)}")
         print(f"Created:  {note.created_at.strftime('%Y-%m-%d %H:%M')}")
