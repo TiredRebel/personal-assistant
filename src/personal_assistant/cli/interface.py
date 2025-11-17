@@ -362,8 +362,12 @@ class CLI:
         results = self.contact_service.search_contacts(query)
 
         if results:
-            self.show_success(f"Found {len(results)} contact(s):")
-            self.display_contacts_table(results)
+            if len(results) > 1:
+                self.show_success(f"Found {len(results)} contact(s):")
+                self.display_contacts_table(results)
+            else:
+                self.show_success(f"Found contact:")
+                self.display_contact(results[0])
         else:
             self.show_warning(f"No contacts found matching '{query}'")
 
@@ -522,7 +526,7 @@ class CLI:
                         today.year + 1, contact.birthday.month, contact.birthday.day
                     )
 
-                birthday_str = next_birthday.strftime('%Y-%m-%d')
+                birthday_str = next_birthday.strftime("%Y-%m-%d")
                 print(f"  • {contact.name}: {birthday_str} ({days_until} day(s))")
         else:
             self.show_warning(f"No birthdays in the next {days} days")
