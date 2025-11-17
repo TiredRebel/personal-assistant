@@ -5,12 +5,12 @@ Validators package - Input validation
 from __future__ import annotations
 
 from .validators import (
-    PhoneValidator,
+    EmailValidationError,
     EmailValidator,
     InputValidator,
-    ValidationError,
     PhoneValidationError,
-    EmailValidationError,
+    PhoneValidator,
+    ValidationError,
 )
 
 __all__: list[str] = [
