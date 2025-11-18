@@ -1,16 +1,7 @@
 # Auto detect text files and perform LF normalization
-* text=auto
+* text=auto eol=lf
 
-# Force CRLF line endings on Windows
-*.yml text eol=crlf
-*.yaml text eol=crlf
-*.md text eol=crlf
-*.py text eol=crlf
-*.txt text eol=crlf
-*.json text eol=crlf
-*.toml text eol=crlf
-
-# Ensure shell scripts use LF (if you have any)
+# Shell scripts
 *.sh text eol=lf
 
 # Binary files
