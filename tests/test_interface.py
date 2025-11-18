@@ -424,8 +424,9 @@ class TestDisplayHelpers:
         cli.display_note(note)
 
         captured = capsys.readouterr()
-        assert "..." in captured.out  # Content should be truncated
-        assert captured.out.count("A") < 150  # Not all content shown
+        # Full content should be displayed without truncation
+        assert captured.out.count("A") == 150  # All content shown
+        assert "..." not in captured.out  # No truncation marker
 
     def test_display_notes_list(self, cli, capsys):
         """Test displaying notes list."""

@@ -1,0 +1,22 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Force CRLF line endings on Windows
+*.yml text eol=crlf
+*.yaml text eol=crlf
+*.md text eol=crlf
+*.py text eol=crlf
+*.txt text eol=crlf
+*.json text eol=crlf
+*.toml text eol=crlf
+
+# Ensure shell scripts use LF (if you have any)
+*.sh text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
