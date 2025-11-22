@@ -15,9 +15,9 @@ from personal_assistant.storage.file_storage import FileStorage
 
 def print_header(title: str) -> None:
     """Вивести заголовок."""
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print(f"  {title}")
-    print(f"{'='*70}\n")
+    print(f"{'=' * 70}\n")
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -156,6 +156,7 @@ def main() -> None:
         command_parser = CommandParser()
 
         # Запуск CLI
+        cli: CLI
         if COLORAMA_AVAILABLE:
             cli = ColoredCLI(contact_service, note_service, command_parser)
         else:

@@ -1,4 +1,5 @@
 import re
+from datetime import date
 from typing import Optional, Tuple
 
 
@@ -458,3 +459,28 @@ class EmailValidationError(ValidationError):
     def __init__(self, message: str, value: Optional[str] = None):
         # field is predefined for this subclass
         super().__init__(message, field="email", value=value)
+
+
+class BirthdayValidator:
+    """
+    Validates birthday dates.
+    """
+
+    @staticmethod
+    def validate(birthday: date) -> Tuple[bool, str]:
+        """
+        Validate a birthday date.
+
+        Args:
+            birthday: Date object to validate
+
+        Returns:
+            Tuple of (is_valid, error_message)
+        """
+        if birthday is None:
+            return True, ""  # Optional field
+
+        if birthday > date.today():
+            return False, "Birthday cannot be in the future"
+
+        return True, ""

@@ -3,7 +3,10 @@ import sys
 from datetime import date
 from typing import Any, Callable, Dict, List, Optional
 
-from personal_assistant.models import Note
+from personal_assistant.cli.command_parser import CommandParser
+from personal_assistant.models import Contact, Note
+from personal_assistant.services.contact_service import ContactService
+from personal_assistant.services.note_service import NoteService
 
 # Try to import colorama, but don't fail if not available
 try:
@@ -14,21 +17,22 @@ except ImportError:
     COLORAMA_AVAILABLE = False
 
 # Try to import readline for command completion (Windows: pyreadline3, Unix: readline)
+READLINE_MODULE: Any = None
 try:
     import readline
 
     READLINE_AVAILABLE = True
-    READLINE_MODULE: Any = readline
+    READLINE_MODULE = readline
 except ImportError:
     try:
         import pyreadline3  # type: ignore[import-untyped]
 
         # pyreadline3 uses a different API - get the readline instance
         READLINE_AVAILABLE = True
-        READLINE_MODULE: Any = pyreadline3.Readline()  # type: ignore[attr-defined]
+        READLINE_MODULE = pyreadline3.Readline()  # type: ignore[attr-defined]
     except (ImportError, AttributeError):
         READLINE_AVAILABLE = False
-        READLINE_MODULE: Any = None
+        READLINE_MODULE = None
 
 
 class CLI:
@@ -43,7 +47,12 @@ class CLI:
     - Help system
     """
 
-    def __init__(self, contact_service, note_service, command_parser):
+    def __init__(
+        self,
+        contact_service: ContactService,
+        note_service: NoteService,
+        command_parser: CommandParser,
+    ) -> None:
         """
         Initialize CLI.
 
@@ -132,7 +141,7 @@ class CLI:
             "stats": self.show_statistics,
         }
 
-    def start(self):
+    def start(self) -> None:
         """
         Start the CLI application.
 
@@ -161,7 +170,7 @@ class CLI:
             except Exception as e:
                 self.show_error(f"Error: {str(e)}")
 
-    def show_welcome(self):
+    def show_welcome(self) -> None:
         """Display welcome message."""
         print("=" * 60)
         print("  Personal Assistant")
@@ -169,7 +178,7 @@ class CLI:
         print("=" * 60)
         print()
 
-    def show_main_menu(self):
+    def show_main_menu(self) -> None:
         """Display main menu options."""
         print("\n--- Main Menu ---")
         print("Contact Management:")
@@ -205,8 +214,8 @@ class CLI:
         # Try intelligent command parsing first
         parsed = self.command_parser.parse(command_str)
 
-        if parsed and parsed.get("command") in self.commands:
-            command_func = self.commands[parsed["command"]]
+        if parsed and str(parsed.get("command")) in self.commands:
+            command_func = self.commands[str(parsed["command"])]
             command_func(parsed.get("args", {}))
         else:
             # Command not recognized, show suggestions
@@ -222,7 +231,8 @@ class CLI:
         If arguments provided, asks for confirmation before requesting additional fields.
 
         Args:
-            args: Pre-parsed arguments (optional, may contain 'values' list with name, phone, email, address)
+            args: Pre-parsed arguments (optional, may contain 'values' list with name,
+                  phone, email, address)
         """
         print("\n--- Add New Contact ---")
 
@@ -238,7 +248,8 @@ class CLI:
                 address = args.get("address")
 
             # Try to extract name, phone, email, address from pre-parsed arguments
-            # args format: {'values': ['John Doe', '+380501234567', 'john@example.com'], 'email': '...', ...}
+            # args format: {'values': ['John Doe', '+380501234567', 'john@example.com'],
+            #               'email': '...', ...}
             if args and args.get("values"):
                 values = args["values"]
 
@@ -366,7 +377,7 @@ class CLI:
                 self.show_success(f"Found {len(results)} contact(s):")
                 self.display_contacts_table(results)
             else:
-                self.show_success(f"Found contact:")
+                self.show_success("Found contact:")
                 self.display_contact(results[0])
         else:
             self.show_warning(f"No contacts found matching '{query}'")
@@ -388,7 +399,8 @@ class CLI:
         Edit an existing contact.
 
         Args:
-            args: Pre-parsed arguments (optional, may contain name and --name/--phone/--email/--address options)
+            args: Pre-parsed arguments (optional, may contain name and
+                  --name/--phone/--email/--address options)
         """
         print("\n--- Edit Contact ---")
 
@@ -519,15 +531,16 @@ class CLI:
             for contact in contacts:
                 days_until = contact.days_until_birthday()
                 # Calculate next birthday date
-                today = date.today()
-                next_birthday = date(today.year, contact.birthday.month, contact.birthday.day)
-                if next_birthday < today:
-                    next_birthday = date(
-                        today.year + 1, contact.birthday.month, contact.birthday.day
-                    )
+                if contact.birthday:
+                    today = date.today()
+                    next_birthday = date(today.year, contact.birthday.month, contact.birthday.day)
+                    if next_birthday < today:
+                        next_birthday = date(
+                            today.year + 1, contact.birthday.month, contact.birthday.day
+                        )
 
-                birthday_str = next_birthday.strftime("%Y-%m-%d")
-                print(f"  • {contact.name}: {birthday_str} ({days_until} day(s))")
+                    birthday_str = next_birthday.strftime("%Y-%m-%d")
+                    print(f"  • {contact.name}: {birthday_str} ({days_until} day(s))")
         else:
             self.show_warning(f"No birthdays in the next {days} days")
 
@@ -538,7 +551,8 @@ class CLI:
         Add a new note.
 
         Args:
-            args: Pre-parsed arguments (optional, may contain title, content via --content, and --tags)
+            args: Pre-parsed arguments (optional, may contain title, content via --content,
+                  and --tags)
         """
         print("\n--- Add New Note ---")
 
@@ -690,7 +704,7 @@ class CLI:
 
     # Display Helpers
 
-    def display_contact(self, contact) -> None:
+    def display_contact(self, contact: Contact) -> None:
         """Display a single contact details."""
         print(f"\nName:     {contact.name}")
         print(f"Phone:    {contact.phone}")
@@ -817,7 +831,8 @@ class CLI:
         Edit an existing note.
 
         Args:
-            args: Pre-parsed arguments (optional, may contain note_id and --title/--content/--tags options)
+            args: Pre-parsed arguments (optional, may contain note_id and
+                  --title/--content/--tags options)
         """
         print("\n--- Edit Note ---")
 
@@ -1011,7 +1026,7 @@ class ColoredCLI(CLI):
     Provides color-coded success, error, and warning messages.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
 
         if COLORAMA_AVAILABLE:
@@ -1022,21 +1037,21 @@ class ColoredCLI(CLI):
         else:
             self.colors_enabled = False
 
-    def show_success(self, message: str):
+    def show_success(self, message: str) -> None:
         """Display success message in green."""
         if self.colors_enabled:
             print(f"{self.Fore.GREEN}✓ {message}{self.Style.RESET_ALL}")
         else:
             super().show_success(message)
 
-    def show_error(self, message: str):
+    def show_error(self, message: str) -> None:
         """Display error message in red."""
         if self.colors_enabled:
             print(f"{self.Fore.RED}✗ {message}{self.Style.RESET_ALL}")
         else:
             super().show_error(message)
 
-    def show_warning(self, message: str):
+    def show_warning(self, message: str) -> None:
         """Display warning message in yellow."""
         if self.colors_enabled:
             print(f"{self.Fore.YELLOW}⚠ {message}{self.Style.RESET_ALL}")

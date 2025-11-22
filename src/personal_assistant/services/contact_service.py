@@ -13,6 +13,7 @@ from typing import List, Optional
 from personal_assistant.models import Contact
 from personal_assistant.storage import FileStorage
 from personal_assistant.validators import (
+    BirthdayValidator,
     EmailValidator,
     PhoneValidator,
     ValidationError,
@@ -95,6 +96,12 @@ class ContactService:
             if not is_valid:
                 raise ValidationError(f"Invalid email: {error_msg}")
             email = EmailValidator.normalize(email)
+
+        # Validate birthday if provided
+        if birthday:
+            is_valid, error_msg = BirthdayValidator.validate(birthday)
+            if not is_valid:
+                raise ValidationError(f"Invalid birthday: {error_msg}")
 
         # Check if contact with same name exists (case-insensitive)
         if self.get_contact_by_name(name):
@@ -231,6 +238,9 @@ class ContactService:
             contact.address = address if address.strip() else None
 
         if birthday is not None:
+            is_valid, error_msg = BirthdayValidator.validate(birthday)
+            if not is_valid:
+                raise ValidationError(f"Invalid birthday: {error_msg}")
             contact.birthday = birthday
 
         # Save to storage

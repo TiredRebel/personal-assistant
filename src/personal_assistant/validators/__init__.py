@@ -5,6 +5,7 @@ Validators package - Input validation
 from __future__ import annotations
 
 from .validators import (
+    BirthdayValidator,
     EmailValidationError,
     EmailValidator,
     InputValidator,
@@ -20,4 +21,5 @@ __all__: list[str] = [
     "ValidationError",
     "PhoneValidationError",
     "EmailValidationError",
+    "BirthdayValidator",
 ]

@@ -8,6 +8,7 @@ from typing import List, Optional, Set
 
 from personal_assistant.models import Note
 from personal_assistant.storage import FileStorage
+from personal_assistant.validators import InputValidator, ValidationError
 
 
 class NoteService:
@@ -59,6 +60,12 @@ class NoteService:
         Raises:
             ValueError: If content is empty
         """
+        if tags:
+            for tag in tags:
+                is_valid, error_msg = InputValidator.validate_tag(tag)
+                if not is_valid:
+                    raise ValidationError(f"Invalid tag '{tag}': {error_msg}")
+
         note = Note(content=content, title=title, tags=tags or [])
         self.notes.append(note)
         self.save_notes()
@@ -186,6 +193,12 @@ class NoteService:
             note.title = title
 
         if tags is not None:
+            # Validate tags
+            for tag in tags:
+                is_valid, error_msg = InputValidator.validate_tag(tag)
+                if not is_valid:
+                    raise ValidationError(f"Invalid tag '{tag}': {error_msg}")
+
             # Normalize tags: lowercase, strip, remove empty, deduplicate
             normalized_tags = [tag.lower().strip() for tag in tags if tag.strip()]
             note.tags = list(set(normalized_tags))
@@ -223,6 +236,10 @@ class NoteService:
         note = self.get_note_by_id(note_id)
         if note is None:
             raise ValueError(f"Note with ID {note_id} not found")
+
+        is_valid, error_msg = InputValidator.validate_tag(tag)
+        if not is_valid:
+            raise ValidationError(f"Invalid tag '{tag}': {error_msg}")
 
         note.add_tag(tag)
         self.save_notes()

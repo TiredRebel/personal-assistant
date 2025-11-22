@@ -11,6 +11,8 @@ from dataclasses import dataclass
 from datetime import date
 from typing import Any, Optional
 
+from personal_assistant.validators.validators import BirthdayValidator
+
 
 @dataclass
 class Contact:
@@ -46,12 +48,17 @@ class Contact:
         Validate contact data after initialization.
 
         Raises:
-            ValueError: If name or phone is empty
+            ValueError: If name or phone is empty, or if birthday is in the future
         """
         if not self.name or not self.name.strip():
             raise ValueError("Contact name cannot be empty")
         if not self.phone:
             raise ValueError("Contact phone cannot be empty")
+
+        if self.birthday:
+            is_valid, error_message = BirthdayValidator.validate(self.birthday)
+            if not is_valid:
+                raise ValueError(error_message)
 
     def to_dict(self) -> dict[str, Optional[str]]:
         """
