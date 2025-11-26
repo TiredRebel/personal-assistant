@@ -8,7 +8,6 @@ Run with: pytest tests/test_contacts.py
 from datetime import date
 
 import pytest
-
 from personal_assistant.models import Contact
 
 
