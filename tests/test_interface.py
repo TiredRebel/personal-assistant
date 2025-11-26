@@ -662,7 +662,10 @@ class TestWelcomeAndMenu:
         cli.show_main_menu()
 
         captured = capsys.readouterr()
-        assert "Main Menu" in captured.out or "Menu" in captured.out
+        assert "Contact Management" in captured.out
+        assert "Section" in captured.out
+        assert "Command" in captured.out
+        assert "Description" in captured.out
         assert "add-contact" in captured.out
         assert "add-note" in captured.out
         assert "help" in captured.out
