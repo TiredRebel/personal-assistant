@@ -288,10 +288,12 @@ class TestContactService:
     def test_get_upcoming_birthdays(self, service: ContactService):
         """Test getting contacts with upcoming birthdays."""
         today = date.today()
-        # Birthday in 3 days
-        birthday1 = today + timedelta(days=3)
-        # Birthday in 10 days
-        birthday2 = today + timedelta(days=10)
+        # Birthday in 3 days (born in 1990)
+        future_date1 = today + timedelta(days=3)
+        birthday1 = date(1990, future_date1.month, future_date1.day)
+        # Birthday in 10 days (born in 1990)
+        future_date2 = today + timedelta(days=10)
+        birthday2 = date(1990, future_date2.month, future_date2.day)
 
         service.add_contact(name="User1", phone="+380501234567", birthday=birthday1)
         service.add_contact(name="User2", phone="+380502234567", birthday=birthday2)
@@ -309,9 +311,15 @@ class TestContactService:
     def test_get_upcoming_birthdays_sorted(self, service: ContactService):
         """Test that upcoming birthdays are sorted by days until birthday."""
         today = date.today()
-        birthday1 = today + timedelta(days=5)
-        birthday2 = today + timedelta(days=2)
-        birthday3 = today + timedelta(days=8)
+        # Birthday in 5 days (born in 1990)
+        future_date1 = today + timedelta(days=5)
+        birthday1 = date(1990, future_date1.month, future_date1.day)
+        # Birthday in 2 days (born in 1990)
+        future_date2 = today + timedelta(days=2)
+        birthday2 = date(1990, future_date2.month, future_date2.day)
+        # Birthday in 8 days (born in 1990)
+        future_date3 = today + timedelta(days=8)
+        birthday3 = date(1990, future_date3.month, future_date3.day)
 
         service.add_contact(name="User1", phone="+380501234567", birthday=birthday1)
         service.add_contact(name="User2", phone="+380502234567", birthday=birthday2)

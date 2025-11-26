@@ -697,11 +697,9 @@ class TestNoteCommandsExtended:
         mock_note_service.edit_note.return_value = updated_note
 
         # Simplified input sequence: choice, title, content, tags
-        inputs = iter(["4", "New Title", "New content", "new,tag"])
         input_call_count = [0]
 
         def mock_input(prompt=None):
-            prompt_str = str(prompt).lower() if prompt else ""
             input_call_count[0] += 1
 
             # First call: choice selection
@@ -833,7 +831,8 @@ class TestContactCommandsExtended:
         """Test adding contact when user rejects initial confirmation."""
         args = {"values": ["Jane Smith", "+380509876543"]}
 
-        # Sequence: reject confirmation, then provide new details (name, phone, email, address, birthday)
+        # Sequence: reject confirmation, then provide new details
+        # (name, phone, email, address, birthday)
         inputs = iter(["no", "Corrected Name", "+380501111111", "", "", ""])
         monkeypatch.setattr("builtins.input", lambda _: next(inputs))
 

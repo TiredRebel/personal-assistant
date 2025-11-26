@@ -197,11 +197,11 @@ class TestNoteService:
 
     def test_search_notes_by_any_tag_sorting(self, service):
         """Test that OR tag search sorts by number of matching tags."""
-        service.create_note(content="Note 1", tags=["a"])
-        note2 = service.create_note(content="Note 2", tags=["a", "b", "c"])
-        note3 = service.create_note(content="Note 3", tags=["a", "b"])
+        service.create_note(content="Note 1", tags=["aa"])
+        note2 = service.create_note(content="Note 2", tags=["aa", "bb", "cc"])
+        note3 = service.create_note(content="Note 3", tags=["aa", "bb"])
 
-        results = service.search_notes_by_any_tag(["a", "b", "c"])
+        results = service.search_notes_by_any_tag(["aa", "bb", "cc"])
         # note2 should be first (has all 3 tags)
         assert results[0].id == note2.id
         # note3 should be second (has 2 tags)
@@ -379,9 +379,9 @@ class TestNoteService:
 
     def test_sort_notes_by_tags_count(self, service):
         """Test sorting notes by number of tags."""
-        note1 = service.create_note(content="Note 1", tags=["a"])
-        note2 = service.create_note(content="Note 2", tags=["a", "b", "c"])
-        note3 = service.create_note(content="Note 3", tags=["a", "b"])
+        note1 = service.create_note(content="Note 1", tags=["aa"])
+        note2 = service.create_note(content="Note 2", tags=["aa", "bb", "cc"])
+        note3 = service.create_note(content="Note 3", tags=["aa", "bb"])
 
         sorted_notes = service.sort_notes_by_tags_count()
 
