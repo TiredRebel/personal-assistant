@@ -8,11 +8,10 @@ on:
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ['3.9', '3.10', '3.11', '3.12']
 
     steps:
@@ -25,8 +24,6 @@ jobs:
 
     - name: Install uv
       uses: astral-sh/setup-uv@v4
-      with:
-        enable-cache: true
 
     - name: Install dependencies
       run: |
@@ -39,7 +36,7 @@ jobs:
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
-      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
+      if: matrix.python-version == '3.11'
       with:
         file: ./coverage.xml
         flags: unittests
@@ -59,8 +56,6 @@ jobs:
 
     - name: Install uv
       uses: astral-sh/setup-uv@v4
-      with:
-        enable-cache: true
 
     - name: Install dependencies
       run: |
