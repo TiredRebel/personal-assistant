@@ -6,7 +6,6 @@ Run with: pytest tests/test_intent_recognizer.py
 """
 
 import pytest
-
 from personal_assistant.cli.intent_recognizer import IntentRecognizer
 
 

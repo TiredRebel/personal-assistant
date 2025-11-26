@@ -42,35 +42,35 @@ import logging
 class FileStorage:
     """
     Handles file-based storage for application data.
-    
+
     Features:
     - JSON serialization/deserialization
     - Atomic writes (write to temp file, then rename)
     - Automatic backups
     - Error recovery
     """
-    
+
     def __init__(self, base_dir: Optional[Path] = None):
         """
         Initialize file storage.
-        
+
         Args:
             base_dir: Base directory for storage (default: ~/.personal_assistant)
         """
         if base_dir is None:
             # Use user's home directory
             base_dir = Path.home() / '.personal_assistant'
-        
+
         self.base_dir = Path(base_dir)
         self.backup_dir = self.base_dir / 'backups'
-        
+
         # Create directories if they don't exist
         self.base_dir.mkdir(parents=True, exist_ok=True)
         self.backup_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Setup logging
         self._setup_logging()
-    
+
     def _setup_logging(self):
         """Setup logging for storage operations."""
         logging.basicConfig(
@@ -82,20 +82,20 @@ class FileStorage:
             ]
         )
         self.logger = logging.getLogger('FileStorage')
-    
+
     def save(self, filename: str, data: List[Dict]) -> bool:
         """
         Save data to JSON file with atomic write.
-        
+
         Uses atomic write pattern:
         1. Write to temporary file
         2. Create backup of existing file
         3. Rename temp file to target file
-        
+
         Args:
             filename: Name of file (e.g., 'contacts.json')
             data: List of dictionaries to save
-        
+
         Returns:
             True if successful, False otherwise
         """
@@ -107,14 +107,14 @@ class FileStorage:
         # 5. Log operation
         # 6. Return success status
         pass
-    
+
     def load(self, filename: str) -> List[Dict]:
         """
         Load data from JSON file.
-        
+
         Args:
             filename: Name of file to load
-        
+
         Returns:
             List of dictionaries, or empty list if file doesn't exist
         """
@@ -126,14 +126,14 @@ class FileStorage:
         # 5. Attempt recovery from backup if needed
         # 6. Return data or empty list
         pass
-    
+
     def create_backup(self, filename: str) -> bool:
         """
         Create a timestamped backup of a file.
-        
+
         Args:
             filename: Name of file to backup
-        
+
         Returns:
             True if backup created, False otherwise
         """
@@ -144,15 +144,15 @@ class FileStorage:
         # 4. Clean old backups (keep last 10)
         # 5. Log operation
         pass
-    
+
     def restore_from_backup(self, filename: str, backup_time: Optional[datetime] = None) -> bool:
         """
         Restore a file from backup.
-        
+
         Args:
             filename: Name of file to restore
             backup_time: Specific backup time (default: most recent)
-        
+
         Returns:
             True if restored successfully, False otherwise
         """
@@ -162,14 +162,14 @@ class FileStorage:
         # 3. Copy backup to main location
         # 4. Log operation
         pass
-    
+
     def list_backups(self, filename: str) -> List[Dict]:
         """
         List all available backups for a file.
-        
+
         Args:
             filename: Name of file
-        
+
         Returns:
             List of backup info (filename, timestamp, size)
         """
@@ -179,11 +179,11 @@ class FileStorage:
         # 3. Get file info (size, timestamp)
         # 4. Return sorted list
         pass
-    
+
     def delete_old_backups(self, filename: str, keep_count: int = 10):
         """
         Delete old backups, keeping only the most recent N.
-        
+
         Args:
             filename: Name of file
             keep_count: Number of backups to keep
@@ -193,14 +193,14 @@ class FileStorage:
         # 2. Sort by timestamp
         # 3. Delete oldest backups beyond keep_count
         pass
-    
+
     def export_data(self, export_path: Path) -> bool:
         """
         Export all data to specified directory.
-        
+
         Args:
             export_path: Path to export directory
-        
+
         Returns:
             True if export successful
         """
@@ -210,14 +210,14 @@ class FileStorage:
         # 3. Create export manifest (timestamp, version)
         # 4. Log operation
         pass
-    
+
     def import_data(self, import_path: Path) -> bool:
         """
         Import data from specified directory.
-        
+
         Args:
             import_path: Path to import directory
-        
+
         Returns:
             True if import successful
         """
@@ -236,18 +236,18 @@ class FileStorage:
 def atomic_write_implementation(filepath: Path, data: str):
     """
     Implement atomic write to prevent data corruption.
-    
+
     Steps:
     1. Write to temporary file
     2. Sync to disk (fsync)
     3. Rename temp file to target (atomic operation)
-    
+
     This ensures that even if the system crashes during write,
     we either have the complete new file or the complete old file,
     never a partially written file.
     """
     import tempfile
-    
+
     # Create temp file in same directory (ensures same filesystem)
     temp_dir = filepath.parent
     temp_fd, temp_path = tempfile.mkstemp(
@@ -255,17 +255,17 @@ def atomic_write_implementation(filepath: Path, data: str):
         prefix=f'.{filepath.name}.',
         suffix='.tmp'
     )
-    
+
     try:
         # Write data to temp file
         with os.fdopen(temp_fd, 'w', encoding='utf-8') as f:
             f.write(data)
             f.flush()
             os.fsync(f.fileno())  # Force write to disk
-        
+
         # Atomic rename (replaces target file)
         os.replace(temp_path, filepath)
-        
+
     except Exception as e:
         # Clean up temp file on error
         try:
@@ -285,7 +285,7 @@ class DateTimeEncoder(json.JSONEncoder):
     """
     Custom JSON encoder for datetime objects.
     """
-    
+
     def default(self, obj: Any) -> Any:
         """Convert datetime objects to ISO format strings."""
         if isinstance(obj, (date, datetime)):
@@ -296,10 +296,10 @@ class DateTimeEncoder(json.JSONEncoder):
 def serialize_for_storage(data: List[Any]) -> str:
     """
     Serialize data to JSON string.
-    
+
     Args:
         data: List of objects to serialize
-    
+
     Returns:
         JSON string
     """
@@ -310,7 +310,7 @@ def serialize_for_storage(data: List[Any]) -> str:
             dict_data.append(item.to_dict())
         else:
             dict_data.append(item)
-    
+
     # Serialize to JSON with pretty printing
     return json.dumps(
         dict_data,
@@ -324,17 +324,17 @@ def serialize_for_storage(data: List[Any]) -> str:
 def deserialize_from_storage(json_str: str, model_class: Any) -> List[Any]:
     """
     Deserialize JSON string to list of objects.
-    
+
     Args:
         json_str: JSON string to parse
         model_class: Class with from_dict() method
-    
+
     Returns:
         List of objects
     """
     # Parse JSON
     dict_data = json.loads(json_str)
-    
+
     # Convert dictionaries to objects
     objects = []
     for item in dict_data:
@@ -342,7 +342,7 @@ def deserialize_from_storage(json_str: str, model_class: Any) -> List[Any]:
             objects.append(model_class.from_dict(item))
         else:
             objects.append(item)
-    
+
     return objects
 ```
 
@@ -367,22 +367,22 @@ class BackupNotFoundError(StorageError):
 def recover_from_corruption(storage: FileStorage, filename: str) -> List[Dict]:
     """
     Attempt to recover data from corrupted file.
-    
+
     Recovery steps:
     1. Try to parse partial JSON
     2. Try to restore from latest backup
     3. Try to restore from older backups
     4. Return empty list if all recovery attempts fail
-    
+
     Args:
         storage: FileStorage instance
         filename: Name of corrupted file
-    
+
     Returns:
         Recovered data or empty list
     """
     logger = logging.getLogger('StorageRecovery')
-    
+
     # Step 1: Try partial JSON parsing
     try:
         logger.info(f"Attempting partial JSON recovery for {filename}")
@@ -390,7 +390,7 @@ def recover_from_corruption(storage: FileStorage, filename: str) -> List[Dict]:
         # ... implementation
     except:
         logger.warning("Partial JSON recovery failed")
-    
+
     # Step 2: Try latest backup
     try:
         logger.info(f"Attempting restore from latest backup")
@@ -398,7 +398,7 @@ def recover_from_corruption(storage: FileStorage, filename: str) -> List[Dict]:
             return storage.load(filename)
     except:
         logger.warning("Latest backup restoration failed")
-    
+
     # Step 3: Try older backups
     backups = storage.list_backups(filename)
     for backup in backups[1:]:  # Skip first (already tried)
@@ -408,7 +408,7 @@ def recover_from_corruption(storage: FileStorage, filename: str) -> List[Dict]:
                 return storage.load(filename)
         except:
             continue
-    
+
     # Step 4: All recovery attempts failed
     logger.error(f"All recovery attempts failed for {filename}")
     return []
@@ -423,7 +423,7 @@ class ConfigManager:
     """
     Manage application configuration.
     """
-    
+
     DEFAULT_CONFIG = {
         'backup_enabled': True,
         'backup_count': 10,
@@ -433,21 +433,21 @@ class ConfigManager:
         'date_format': '%Y-%m-%d',
         'time_format': '%H:%M:%S'
     }
-    
+
     def __init__(self, storage: FileStorage):
         """
         Initialize config manager.
-        
+
         Args:
             storage: FileStorage instance
         """
         self.storage = storage
         self.config = self.load_config()
-    
+
     def load_config(self) -> Dict[str, Any]:
         """
         Load configuration from file.
-        
+
         Returns:
             Configuration dictionary
         """
@@ -458,15 +458,15 @@ class ConfigManager:
         except:
             pass
         return self.DEFAULT_CONFIG.copy()
-    
+
     def save_config(self):
         """Save configuration to file."""
         self.storage.save('config.json', [self.config])
-    
+
     def get(self, key: str, default: Any = None) -> Any:
         """Get configuration value."""
         return self.config.get(key, default)
-    
+
     def set(self, key: str, value: Any):
         """Set configuration value."""
         self.config[key] = value

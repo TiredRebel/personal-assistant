@@ -4,11 +4,11 @@
 
 This project has been **specifically designed** to work excellently with GitHub Copilot. Every specification file includes:
 
-✅ **Detailed docstrings** - Copilot uses these to understand what code should do  
-✅ **Type hints** - Helps Copilot generate type-safe code  
-✅ **Complete function signatures** - Clear templates for implementation  
-✅ **Usage examples** - Shows Copilot the expected behavior  
-✅ **Test requirements** - Guides test generation  
+✅ **Detailed docstrings** - Copilot uses these to understand what code should do
+✅ **Type hints** - Helps Copilot generate type-safe code
+✅ **Complete function signatures** - Clear templates for implementation
+✅ **Usage examples** - Shows Copilot the expected behavior
+✅ **Test requirements** - Guides test generation
 
 ## How to Get the Best Results from Copilot
 
@@ -31,15 +31,15 @@ This gives Copilot context from both the specification and your implementation.
 def add_contact(self, name: str, phone: str, email: Optional[str] = None) -> Contact:
     """
     Add a new contact to the address book.
-    
+
     Args:
         name: Contact's full name
         phone: Phone number (will be validated)
         email: Email address (optional)
-    
+
     Returns:
         The created Contact object
-    
+
     Raises:
         ValidationError: If phone or email is invalid
     """
@@ -84,10 +84,10 @@ def test_1():
 def parse_command(self, input_str: str) -> Dict:
     # Step 1: Clean and normalize input
     # Copilot will suggest: input_str = input_str.strip().lower()
-    
+
     # Step 2: Try exact match
     # Copilot will suggest: if input_str in self.command_map: ...
-    
+
     # Step 3: Try fuzzy matching
     # Copilot will suggest: fuzzy matching implementation
 ```
@@ -105,25 +105,25 @@ def parse_command(self, input_str: str) -> Dict:
 ```python
 class PhoneValidator:
     """Validates and normalizes Ukrainian phone numbers."""
-    
+
     MOBILE_CODES = [
         '039', '050', '063', '066', '067', '068',
         '091', '092', '093', '094', '095', '096', '097', '098', '099'
     ]
-    
+
     @staticmethod
     def validate(phone: str) -> Tuple[bool, str]:
         """
         Validate a phone number.
-        
+
         Supported formats:
         - +380501234567
         - 0501234567
         - +380 50 123 45 67
-        
+
         Args:
             phone: Phone number to validate
-        
+
         Returns:
             Tuple of (is_valid, error_message)
         """
@@ -145,12 +145,12 @@ class PhoneValidator:
 def search_contacts(self, query: str) -> List[Contact]:
     """
     Search contacts by name, phone, or email.
-    
+
     Performs case-insensitive partial matching.
-    
+
     Args:
         query: Search query string
-    
+
     Returns:
         List of matching contacts
     """
@@ -201,7 +201,7 @@ def test_phone_validation_rejects_invalid_operator():
 # Get all contacts with birthdays in the next N days
 
 # Copilot suggests:
-return [c for c in self.contacts 
+return [c for c in self.contacts
         if c.birthday and c.days_until_birthday() <= days]
 ```
 
@@ -211,10 +211,10 @@ return [c for c in self.contacts
 def validate_email(email: str) -> Tuple[bool, str]:
     """Validate email format."""
     # Check if empty
-    # Check for @ symbol  
+    # Check for @ symbol
     # Validate domain
     # Return result
-    
+
     # Copilot will implement all checks!
 ```
 
@@ -232,7 +232,7 @@ def add_contact(self, ...):
         # Handle validation error
     except Exception as e:
         # Handle other errors
-    
+
     # Copilot fills in all the try/except logic!
 ```
 
@@ -309,10 +309,10 @@ Write test names that describe behavior, and Copilot will generate the test code
 class TestContactService:
     def test_add_contact_with_valid_data_creates_contact(self):
         # Copilot knows exactly what to test!
-    
+
     def test_add_contact_with_invalid_phone_raises_validation_error(self):
         # Copilot suggests pytest.raises!
-    
+
     def test_search_contacts_returns_matches_case_insensitive(self):
         # Copilot generates search test with assertions!
 ```
@@ -351,12 +351,12 @@ This project's specs are like a **detailed blueprint** that Copilot can read. Th
 
 **Key Success Factors:**
 
-✅ Read the spec first - understand what you're building  
-✅ Use the exact function signatures from specs  
-✅ Write detailed docstrings before code  
-✅ Keep spec files open while coding  
-✅ Write descriptive test names  
-✅ Trust but verify Copilot's suggestions  
+✅ Read the spec first - understand what you're building
+✅ Use the exact function signatures from specs
+✅ Write detailed docstrings before code
+✅ Keep spec files open while coding
+✅ Write descriptive test names
+✅ Trust but verify Copilot's suggestions
 
 **Remember:** Copilot is your pair programmer. You provide the requirements (from the specs), and Copilot helps with the implementation. Together, you'll build great code!
 

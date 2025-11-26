@@ -41,6 +41,8 @@ dev = [
     "mypy>=1.4.0",
     "flake8>=6.0.0",
     "ruff>=0.1.0",
+    "types-setuptools>=68.0.0",
+    "pre-commit>=3.5.0",
 ]
 
 [project.scripts]
@@ -87,6 +89,10 @@ disallow_untyped_defs = true
 [[tool.mypy.overrides]]
 module = "pyreadline3"
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
 
 [tool.ruff]
 line-length = 100

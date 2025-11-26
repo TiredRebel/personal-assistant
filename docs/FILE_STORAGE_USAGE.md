@@ -202,7 +202,7 @@ success = storage.restore_from_backup('contacts.json')
 
 if success:
     print("Дані відновлено з останньої резервної копії")
-    
+
 # Відновлення з конкретної резервної копії за датою
 backup_time = datetime(2025, 11, 11, 20, 0, 0)
 success = storage.restore_from_backup('contacts.json', backup_time)
@@ -295,7 +295,7 @@ from personal_assistant.storage import (
 try:
     # Спроба завантажити дані
     contacts = storage.load('contacts.json')
-    
+
 except CorruptedDataError as e:
     print(f"Файл пошкоджено: {e}")
     # FileStorage автоматично спробує відновити з резервної копії
@@ -467,7 +467,7 @@ storage2 = FileStorage()
 
 if storage2.import_data(import_path):
     print("✓ Дані успішно імпортовано")
-    
+
     # Перевірка
     contacts = storage2.load('contacts.json')
     print(f"  Завантажено {len(contacts)} контактів")
@@ -483,14 +483,14 @@ def print_storage_info(storage):
     """Виведення інформації про стан сховища"""
     print("\n=== Інформація про сховище ===")
     print(f"Директорія: {storage.base_dir}")
-    
+
     # Перевірка файлів даних
     data_files = list(storage.base_dir.glob('*.json'))
     print(f"\nФайли даних: {len(data_files)}")
     for file in data_files:
         size = file.stat().st_size
         print(f"  - {file.name}: {size / 1024:.2f} КБ")
-    
+
     # Інформація про резервні копії
     for file in data_files:
         backups = storage.list_backups(file.name)
@@ -515,37 +515,37 @@ for file in storage.base_dir.glob('*.json'):
 ```python
 class ContactManager:
     """Менеджер контактів з інтегрованим сховищем"""
-    
+
     def __init__(self):
         self.storage = FileStorage()
         self.contacts = self.load_contacts()
-    
+
     def load_contacts(self):
         """Завантаження всіх контактів"""
         data = self.storage.load('contacts.json')
         return [Contact.from_dict(d) for d in data]
-    
+
     def save_contacts(self):
         """Збереження всіх контактів"""
         data = [c.to_dict() for c in self.contacts]
         return self.storage.save('contacts.json', data)
-    
+
     def add_contact(self, contact: Contact):
         """Додавання нового контакту"""
         self.contacts.append(contact)
         self.save_contacts()
         print(f"✓ Контакт '{contact.name}' додано")
-    
+
     def search_by_name(self, query: str):
         """Пошук контактів за іменем"""
         query = query.lower()
         return [c for c in self.contacts if query in c.name.lower()]
-    
+
     def backup(self):
         """Створення резервної копії"""
         self.storage.create_backup('contacts.json')
         print("✓ Резервну копію створено")
-    
+
     def show_backups(self):
         """Показати всі резервні копії"""
         backups = self.storage.list_backups('contacts.json')
@@ -598,14 +598,14 @@ def safe_update(storage, filename, update_func):
     """Безпечне оновлення даних з автоматичним резервним копіюванням"""
     # Створення резервної копії
     storage.create_backup(filename)
-    
+
     try:
         # Завантаження даних
         data = storage.load(filename)
-        
+
         # Застосування змін
         updated_data = update_func(data)
-        
+
         # Збереження
         if storage.save(filename, updated_data):
             print("✓ Оновлення успішне")

@@ -6,7 +6,6 @@ Run with: pytest tests/test_validation.py
 """
 
 import pytest
-
 from personal_assistant.validators import (
     EmailValidator,
     InputValidator,

@@ -104,15 +104,15 @@ This guide provides a step-by-step approach to implementing the Personal Assista
 # Use type hints
 def add_contact(name: str, phone: str, email: str) -> Contact:
     """Add a new contact to the address book.
-    
+
     Args:
         name: Contact's full name
         phone: Phone number (will be validated)
         email: Email address (will be validated)
-    
+
     Returns:
         Contact: The created contact object
-    
+
     Raises:
         ValidationError: If phone or email is invalid
     """
@@ -152,7 +152,7 @@ def test_add_contact_valid_data():
    ```python
    # Good
    def find_contacts_by_birthday_in_days(days: int) -> List[Contact]:
-   
+
    # Bad
    def find(d):
    ```
@@ -162,15 +162,15 @@ def test_add_contact_valid_data():
    def validate_phone_number(phone: str) -> bool:
        """
        Validate Ukrainian phone number format.
-       
+
        Accepts formats:
        - +380501234567
        - 0501234567
        - +38 050 123 45 67
-       
+
        Args:
            phone: Phone number string to validate
-       
+
        Returns:
            True if valid, False otherwise
        """
@@ -180,7 +180,7 @@ def test_add_contact_valid_data():
 3. **Use type hints everywhere**
    ```python
    from typing import List, Optional, Dict
-   
+
    def search_contacts(query: str) -> List[Contact]:
        pass
    ```
@@ -189,7 +189,7 @@ def test_add_contact_valid_data():
    ```python
    def test_phone_validation_accepts_ukrainian_format():
        pass
-   
+
    def test_phone_validation_rejects_invalid_format():
        pass
    ```

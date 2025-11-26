@@ -16,7 +16,7 @@ from typing import Optional
 class Contact:
     """
     Represents a contact in the address book.
-    
+
     Attributes:
         name: Full name of the contact (required)
         phone: Phone number (validated, required)
@@ -29,18 +29,18 @@ class Contact:
     email: Optional[str] = None
     address: Optional[str] = None
     birthday: Optional[date] = None
-    
+
     def __post_init__(self):
         """Validate contact data after initialization."""
         if not self.name or not self.name.strip():
             raise ValueError("Contact name cannot be empty")
         if not self.phone:
             raise ValueError("Contact phone cannot be empty")
-    
+
     def to_dict(self) -> dict:
         """
         Convert contact to dictionary for JSON serialization.
-        
+
         Returns:
             Dictionary representation of the contact
         """
@@ -51,22 +51,22 @@ class Contact:
             "address": self.address,
             "birthday": self.birthday.isoformat() if self.birthday else None
         }
-    
+
     @classmethod
     def from_dict(cls, data: dict) -> 'Contact':
         """
         Create contact from dictionary (JSON deserialization).
-        
+
         Args:
             data: Dictionary containing contact data
-        
+
         Returns:
             Contact instance
         """
         birthday = None
         if data.get("birthday"):
             birthday = date.fromisoformat(data["birthday"])
-        
+
         return cls(
             name=data["name"],
             phone=data["phone"],
@@ -74,24 +74,24 @@ class Contact:
             address=data.get("address"),
             birthday=birthday
         )
-    
+
     def days_until_birthday(self) -> Optional[int]:
         """
         Calculate days until next birthday.
-        
+
         Returns:
             Number of days until birthday, or None if birthday not set
         """
         if not self.birthday:
             return None
-        
+
         today = date.today()
         next_birthday = date(today.year, self.birthday.month, self.birthday.day)
-        
+
         # If birthday already passed this year, use next year
         if next_birthday < today:
             next_birthday = date(today.year + 1, self.birthday.month, self.birthday.day)
-        
+
         return (next_birthday - today).days
 ```
 
@@ -106,7 +106,7 @@ from datetime import date
 class ContactService:
     """
     Service class for managing contacts.
-    
+
     Handles all business logic for contact operations:
     - Adding new contacts
     - Searching contacts
@@ -114,43 +114,43 @@ class ContactService:
     - Deleting contacts
     - Birthday reminders
     """
-    
+
     def __init__(self, storage):
         """
         Initialize contact service.
-        
+
         Args:
             storage: Storage instance for data persistence
         """
         self.storage = storage
         self.contacts: List[Contact] = []
         self.load_contacts()
-    
+
     def load_contacts(self):
         """Load contacts from storage."""
         # Implementation: Load from storage.load("contacts")
         pass
-    
+
     def save_contacts(self):
         """Save contacts to storage."""
         # Implementation: Save to storage.save("contacts", contacts)
         pass
-    
+
     def add_contact(self, name: str, phone: str, email: Optional[str] = None,
                    address: Optional[str] = None, birthday: Optional[date] = None) -> Contact:
         """
         Add a new contact to the address book.
-        
+
         Args:
             name: Contact's full name
             phone: Phone number (will be validated)
             email: Email address (will be validated, optional)
             address: Physical address (optional)
             birthday: Date of birth (optional)
-        
+
         Returns:
             The created Contact object
-        
+
         Raises:
             ValidationError: If phone or email format is invalid
             ValueError: If contact with same name already exists
@@ -164,19 +164,19 @@ class ContactService:
         # 6. Save to storage
         # 7. Return created contact
         pass
-    
+
     def search_contacts(self, query: str) -> List[Contact]:
         """
         Search contacts by name, phone, or email.
-        
+
         Performs case-insensitive partial matching across:
         - Contact name
         - Phone number
         - Email address
-        
+
         Args:
             query: Search query string
-        
+
         Returns:
             List of matching contacts
         """
@@ -185,26 +185,26 @@ class ContactService:
         # 2. Filter contacts where query matches name, phone, or email
         # 3. Return matching contacts
         pass
-    
+
     def get_contact_by_name(self, name: str) -> Optional[Contact]:
         """
         Find a contact by exact name match.
-        
+
         Args:
             name: Contact name to search for
-        
+
         Returns:
             Contact if found, None otherwise
         """
         # Implementation: Search for exact name match (case-insensitive)
         pass
-    
+
     def edit_contact(self, old_name: str, name: Optional[str] = None,
                     phone: Optional[str] = None, email: Optional[str] = None,
                     address: Optional[str] = None, birthday: Optional[date] = None) -> Contact:
         """
         Edit an existing contact.
-        
+
         Args:
             old_name: Current name of the contact to edit
             name: New name (optional, keeps old if None)
@@ -212,10 +212,10 @@ class ContactService:
             email: New email (optional, keeps old if None)
             address: New address (optional, keeps old if None)
             birthday: New birthday (optional, keeps old if None)
-        
+
         Returns:
             The updated Contact object
-        
+
         Raises:
             ValueError: If contact not found
             ValidationError: If new phone or email is invalid
@@ -227,14 +227,14 @@ class ContactService:
         # 4. Save to storage
         # 5. Return updated contact
         pass
-    
+
     def delete_contact(self, name: str) -> bool:
         """
         Delete a contact by name.
-        
+
         Args:
             name: Name of contact to delete
-        
+
         Returns:
             True if contact was deleted, False if not found
         """
@@ -244,14 +244,14 @@ class ContactService:
         # 3. Save to storage
         # 4. Return True/False
         pass
-    
+
     def get_upcoming_birthdays(self, days: int) -> List[Contact]:
         """
         Get contacts with birthdays in the next N days.
-        
+
         Args:
             days: Number of days to look ahead
-        
+
         Returns:
             List of contacts with upcoming birthdays, sorted by days until birthday
         """
@@ -262,20 +262,20 @@ class ContactService:
         # 4. Sort by days_until_birthday
         # 5. Return sorted list
         pass
-    
+
     def get_all_contacts(self) -> List[Contact]:
         """
         Get all contacts.
-        
+
         Returns:
             List of all contacts
         """
         return self.contacts.copy()
-    
+
     def get_contacts_count(self) -> int:
         """
         Get total number of contacts.
-        
+
         Returns:
             Number of contacts in address book
         """
@@ -370,23 +370,23 @@ else:
    def test_contact_creation_with_all_fields():
        """Test creating contact with all fields populated."""
        pass
-   
+
    def test_contact_creation_minimal_fields():
        """Test creating contact with only required fields."""
        pass
-   
+
    def test_contact_to_dict():
        """Test contact serialization to dictionary."""
        pass
-   
+
    def test_contact_from_dict():
        """Test contact deserialization from dictionary."""
        pass
-   
+
    def test_days_until_birthday_calculation():
        """Test birthday countdown calculation."""
        pass
-   
+
    def test_contact_validation_empty_name():
        """Test that empty name raises ValueError."""
        pass
@@ -397,35 +397,35 @@ else:
    def test_add_contact_valid_data():
        """Test adding contact with valid data."""
        pass
-   
+
    def test_add_contact_invalid_phone():
        """Test that invalid phone raises ValidationError."""
        pass
-   
+
    def test_add_contact_duplicate_name():
        """Test that duplicate name raises ValueError."""
        pass
-   
+
    def test_search_contacts_by_name():
        """Test searching contacts by name."""
        pass
-   
+
    def test_search_contacts_case_insensitive():
        """Test that search is case-insensitive."""
        pass
-   
+
    def test_edit_contact_success():
        """Test editing existing contact."""
        pass
-   
+
    def test_edit_contact_not_found():
        """Test editing non-existent contact raises error."""
        pass
-   
+
    def test_delete_contact_success():
        """Test deleting existing contact."""
        pass
-   
+
    def test_get_upcoming_birthdays():
        """Test getting contacts with upcoming birthdays."""
        pass

@@ -73,28 +73,28 @@ def main() -> None:
 
     # Save data
     print("\n1. Saving contacts...")
-    if storage.save('contacts.json', contacts):
+    if storage.save("contacts.json", contacts):
         print(f"   ✓ Saved {len(contacts)} contacts")
 
     print("\n2. Saving notes...")
-    if storage.save('notes.json', notes):
+    if storage.save("notes.json", notes):
         print(f"   ✓ Saved {len(notes)} notes")
 
     # Load data
     print("\n3. Loading contacts...")
-    loaded_contacts = storage.load('contacts.json')
+    loaded_contacts = storage.load("contacts.json")
     print(f"   ✓ Loaded {len(loaded_contacts)} contacts")
     for contact in loaded_contacts:
         print(f"     - {contact['name']}: {contact['phone']}")
 
     # Create backup
     print("\n4. Creating backup...")
-    if storage.create_backup('contacts.json'):
+    if storage.create_backup("contacts.json"):
         print("   ✓ Backup created")
 
     # List backups
     print("\n5. Listing backups...")
-    backups = storage.list_backups('contacts.json')
+    backups = storage.list_backups("contacts.json")
     print(f"   ✓ Found {len(backups)} backup(s)")
     for backup in backups:
         print(f"     - {backup['filename']} ({backup['size_mb']} MB)")

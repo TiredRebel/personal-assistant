@@ -8,7 +8,6 @@ from datetime import datetime
 from unittest.mock import MagicMock
 
 import pytest
-
 from personal_assistant.models import Note
 from personal_assistant.services import NoteService
 

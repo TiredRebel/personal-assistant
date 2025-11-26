@@ -6,7 +6,6 @@ Run with: pytest tests/test_smart_command_parser.py
 """
 
 import pytest
-
 from personal_assistant.cli.smart_command_parser import SmartCommandParser
 
 
@@ -243,9 +242,7 @@ class TestSmartCommandParser:
         assert "add person" in patterns
         assert "new contact" in patterns
 
-    def test_get_user_patterns_for_nonexistent_command(
-        self, parser: SmartCommandParser
-    ):
+    def test_get_user_patterns_for_nonexistent_command(self, parser: SmartCommandParser):
         """Test getting patterns for a command that hasn't been used."""
         patterns = parser.get_user_patterns_for_command("nonexistent-command")
 

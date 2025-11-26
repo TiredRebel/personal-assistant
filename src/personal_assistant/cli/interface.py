@@ -16,6 +16,17 @@ try:
 except ImportError:
     COLORAMA_AVAILABLE = False
 
+    class _Mock:
+        def __getattr__(self, _: str) -> str:
+            return ""
+
+    Fore = _Mock()  # type: ignore
+    Style = _Mock()  # type: ignore
+
+    def init(*args, **kwargs):  # type: ignore
+        pass
+
+
 # Try to import readline for command completion (Windows: pyreadline3, Unix: readline)
 READLINE_MODULE: Any = None
 try:

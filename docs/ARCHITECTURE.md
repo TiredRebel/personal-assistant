@@ -177,7 +177,7 @@ class ContactService:
     def __init__(self, storage):
         self.storage = storage
         self.contacts = []
-    
+
     def add_contact(self, ...):
         # Business logic here
         pass
@@ -196,7 +196,7 @@ class FileStorage:
     def save(self, filename, data):
         # Persistence logic
         pass
-    
+
     def load(self, filename):
         # Loading logic
         pass

@@ -26,7 +26,7 @@ Use this checklist to track your progress through the project.
 ### Validation Module
 - [x] Read VALIDATION_MODULE.md
 - [x] Implement PhoneValidator
-- [x] Implement EmailValidator  
+- [x] Implement EmailValidator
 - [x] Implement InputValidator
 - [ ] Write validation tests
 - [ ] All validation tests passing
@@ -155,7 +155,7 @@ Use this checklist to track your progress through the project.
 
 **Team Member 1**: Data Models & Validation
 - [x] Contact model
-- [x] Note model  
+- [x] Note model
 - [x] Validation module
 - [ ] Unit tests
 

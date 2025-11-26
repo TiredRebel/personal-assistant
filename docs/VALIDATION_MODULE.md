@@ -45,21 +45,21 @@ class PhoneValidator:
     """
     Validates and normalizes Ukrainian phone numbers.
     """
-    
+
     # Ukrainian mobile operator codes
     MOBILE_CODES = [
         '039', '050', '063', '066', '067', '068',
         '091', '092', '093', '094', '095', '096', '097', '098', '099'
     ]
-    
+
     @staticmethod
     def validate(phone: str) -> Tuple[bool, str]:
         """
         Validate a phone number.
-        
+
         Args:
             phone: Phone number to validate
-        
+
         Returns:
             Tuple of (is_valid, error_message)
             If valid: (True, "")
@@ -72,20 +72,20 @@ class PhoneValidator:
         # 4. Check if operator code is valid
         # 5. Return validation result
         pass
-    
+
     @staticmethod
     def normalize(phone: str) -> str:
         """
         Normalize phone number to international format.
-        
+
         Converts all valid formats to +380XXXXXXXXX
-        
+
         Args:
             phone: Phone number to normalize
-        
+
         Returns:
             Normalized phone number
-        
+
         Raises:
             ValidationError: If phone number is invalid
         """
@@ -95,32 +95,32 @@ class PhoneValidator:
         # 3. Convert to international format
         # 4. Return normalized phone
         pass
-    
+
     @staticmethod
     def format_display(phone: str) -> str:
         """
         Format phone number for display.
-        
+
         Converts +380501234567 to +380 50 123 45 67
-        
+
         Args:
             phone: Normalized phone number
-        
+
         Returns:
             Formatted phone number for display
         """
         # Implementation:
         # Format as: +380 XX XXX XX XX
         pass
-    
+
     @classmethod
     def is_valid_operator_code(cls, code: str) -> bool:
         """
         Check if operator code is valid.
-        
+
         Args:
             code: Three-digit operator code
-        
+
         Returns:
             True if valid Ukrainian mobile operator
         """
@@ -131,7 +131,7 @@ class PhoneValidator:
 def validate_phone_implementation(phone: str) -> Tuple[bool, str]:
     """
     Detailed validation logic for phone numbers.
-    
+
     Steps:
     1. Clean input (remove spaces, hyphens)
     2. Handle international format (+380)
@@ -142,11 +142,11 @@ def validate_phone_implementation(phone: str) -> Tuple[bool, str]:
     """
     # Remove spaces and hyphens
     cleaned = re.sub(r'[\s\-]', '', phone)
-    
+
     # Check if empty
     if not cleaned:
         return False, "Phone number cannot be empty"
-    
+
     # Handle international format
     if cleaned.startswith('+380'):
         if len(cleaned) != 13:  # +380 + 9 digits
@@ -155,7 +155,7 @@ def validate_phone_implementation(phone: str) -> Tuple[bool, str]:
         if not PhoneValidator.is_valid_operator_code(operator_code):
             return False, f"Invalid operator code: {operator_code}"
         return True, ""
-    
+
     # Handle national format
     elif cleaned.startswith('0'):
         if len(cleaned) != 10:  # 0 + 9 digits
@@ -164,7 +164,7 @@ def validate_phone_implementation(phone: str) -> Tuple[bool, str]:
         if not PhoneValidator.is_valid_operator_code(operator_code):
             return False, f"Invalid operator code: {operator_code}"
         return True, ""
-    
+
     else:
         return False, "Phone number must start with +380 or 0"
 ```
@@ -187,20 +187,20 @@ class EmailValidator:
     """
     Validates email addresses.
     """
-    
+
     # Regular expression for email validation
     EMAIL_REGEX = re.compile(
         r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     )
-    
+
     @staticmethod
     def validate(email: str) -> Tuple[bool, str]:
         """
         Validate an email address.
-        
+
         Args:
             email: Email address to validate
-        
+
         Returns:
             Tuple of (is_valid, error_message)
         """
@@ -211,28 +211,28 @@ class EmailValidator:
         # 4. Validate TLD length
         # 5. Return validation result
         pass
-    
+
     @staticmethod
     def normalize(email: str) -> str:
         """
         Normalize email address (lowercase, trim).
-        
+
         Args:
             email: Email address to normalize
-        
+
         Returns:
             Normalized email address
         """
         return email.strip().lower()
-    
+
     @staticmethod
     def check_common_typos(email: str) -> list:
         """
         Check for common email typos.
-        
+
         Args:
             email: Email address to check
-        
+
         Returns:
             List of suggested corrections
         """
@@ -245,15 +245,15 @@ class EmailValidator:
             'hotmali.com': 'hotmail.com',
             'outlok.com': 'outlook.com'
         }
-        
+
         # Check domain against typos
         suggestions = []
         domain = email.split('@')[1] if '@' in email else ''
-        
+
         for typo, correction in typos.items():
             if domain == typo:
                 suggestions.append(email.replace(typo, correction))
-        
+
         return suggestions
 
 
@@ -261,7 +261,7 @@ class EmailValidator:
 def validate_email_implementation(email: str) -> Tuple[bool, str]:
     """
     Detailed validation logic for email addresses.
-    
+
     Steps:
     1. Check if empty
     2. Normalize (trim, lowercase)
@@ -273,49 +273,49 @@ def validate_email_implementation(email: str) -> Tuple[bool, str]:
     # Check if empty
     if not email or not email.strip():
         return False, "Email address cannot be empty"
-    
+
     # Normalize
     email = email.strip().lower()
-    
+
     # Check for @ symbol
     if '@' not in email:
         return False, "Email must contain @ symbol"
-    
+
     # Split into local and domain parts
     parts = email.split('@')
     if len(parts) != 2:
         return False, "Email must have exactly one @ symbol"
-    
+
     local, domain = parts
-    
+
     # Validate local part
     if not local:
         return False, "Email local part cannot be empty"
-    
+
     if len(local) > 64:
         return False, "Email local part too long (max 64 characters)"
-    
+
     # Validate domain
     if not domain:
         return False, "Email domain cannot be empty"
-    
+
     if '.' not in domain:
         return False, "Email domain must contain at least one dot"
-    
+
     # Check TLD
     tld = domain.split('.')[-1]
     if len(tld) < 2:
         return False, "Top-level domain must be at least 2 characters"
-    
+
     # Use regex for final validation
     if not EmailValidator.EMAIL_REGEX.match(email):
         return False, "Invalid email format"
-    
+
     # Check for common typos
     suggestions = EmailValidator.check_common_typos(email)
     if suggestions:
         return False, f"Possible typo. Did you mean: {suggestions[0]}?"
-    
+
     return True, ""
 ```
 
@@ -328,20 +328,20 @@ class InputValidator:
     """
     General input validation utilities.
     """
-    
+
     @staticmethod
     def validate_name(name: str) -> Tuple[bool, str]:
         """
         Validate contact/person name.
-        
+
         Requirements:
         - Not empty
         - 2-100 characters
         - Only letters, spaces, hyphens, apostrophes
-        
+
         Args:
             name: Name to validate
-        
+
         Returns:
             Tuple of (is_valid, error_message)
         """
@@ -350,18 +350,18 @@ class InputValidator:
         # 2. Check length (2-100 chars)
         # 3. Check allowed characters
         pass
-    
+
     @staticmethod
     def validate_text_content(text: str, min_length: int = 1,
                             max_length: int = 10000) -> Tuple[bool, str]:
         """
         Validate text content (notes, addresses, etc.).
-        
+
         Args:
             text: Text to validate
             min_length: Minimum length
             max_length: Maximum length
-        
+
         Returns:
             Tuple of (is_valid, error_message)
         """
@@ -369,21 +369,21 @@ class InputValidator:
         # 1. Check if empty (if min_length > 0)
         # 2. Check length constraints
         pass
-    
+
     @staticmethod
     def validate_tag(tag: str) -> Tuple[bool, str]:
         """
         Validate a tag/keyword.
-        
+
         Requirements:
         - Not empty
         - 2-30 characters
         - Only alphanumeric and hyphens
         - No spaces
-        
+
         Args:
             tag: Tag to validate
-        
+
         Returns:
             Tuple of (is_valid, error_message)
         """
@@ -392,27 +392,27 @@ class InputValidator:
         # 2. Check length
         # 3. Check allowed characters (alphanumeric + hyphen)
         pass
-    
+
     @staticmethod
     def sanitize_input(text: str) -> str:
         """
         Sanitize user input (trim, remove dangerous characters).
-        
+
         Args:
             text: Input text to sanitize
-        
+
         Returns:
             Sanitized text
         """
         # Remove leading/trailing whitespace
         text = text.strip()
-        
+
         # Remove null bytes
         text = text.replace('\0', '')
-        
+
         # Normalize whitespace
         text = ' '.join(text.split())
-        
+
         return text
 ```
 
@@ -422,19 +422,19 @@ class InputValidator:
 class ValidationError(Exception):
     """
     Base exception for validation errors.
-    
+
     Attributes:
         message: Error message
         field: Name of field that failed validation
         value: Invalid value that was provided
     """
-    
+
     def __init__(self, message: str, field: str = None, value: str = None):
         self.message = message
         self.field = field
         self.value = value
         super().__init__(self.message)
-    
+
     def __str__(self):
         if self.field:
             return f"Validation error for '{self.field}': {self.message}"
@@ -506,25 +506,25 @@ if not is_valid:
 ```python
 def create_contact_with_validation(name: str, phone: str, email: str = None):
     """Create contact with input validation."""
-    
+
     # Validate name
     is_valid, error = InputValidator.validate_name(name)
     if not is_valid:
         raise ValidationError(error, field="name", value=name)
-    
+
     # Validate and normalize phone
     is_valid, error = PhoneValidator.validate(phone)
     if not is_valid:
         raise PhoneValidationError(error, field="phone", value=phone)
     phone = PhoneValidator.normalize(phone)
-    
+
     # Validate and normalize email (if provided)
     if email:
         is_valid, error = EmailValidator.validate(email)
         if not is_valid:
             raise EmailValidationError(error, field="email", value=email)
         email = EmailValidator.normalize(email)
-    
+
     # Create contact
     contact = Contact(name=name, phone=phone, email=email)
     return contact

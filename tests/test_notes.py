@@ -8,7 +8,6 @@ Run with: pytest tests/test_notes.py
 from datetime import datetime
 
 import pytest
-
 from personal_assistant.models import Note
 
 

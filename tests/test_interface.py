@@ -2,7 +2,6 @@ from datetime import date
 from unittest.mock import Mock, patch
 
 import pytest
-
 from personal_assistant.cli.interface import CLI
 from personal_assistant.models.contact import Contact
 from personal_assistant.models.note import Note

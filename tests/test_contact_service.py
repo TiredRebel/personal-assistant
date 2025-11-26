@@ -10,7 +10,6 @@ from typing import List
 from unittest.mock import MagicMock
 
 import pytest
-
 from personal_assistant.models import Contact
 from personal_assistant.services import ContactService
 from personal_assistant.validators import ValidationError
@@ -32,7 +31,7 @@ class TestContactService:
         """Create a ContactService instance with mock storage."""
         return ContactService(mock_storage)
 
-    def test_add_contact_valid_data(self, service: ContactService):
+    def test_add_contact_valid_data(self, service: ContactService, mock_storage: MagicMock):
         """Test adding contact with valid data."""
         contact = service.add_contact(
             name="John Doe",
@@ -48,7 +47,8 @@ class TestContactService:
         assert contact.address == "123 Main St, Kyiv"
         assert contact.birthday == date(1990, 5, 15)
         assert len(service.contacts) == 1
-        assert service.save_contacts
+        # Verify save was called
+        assert mock_storage.save.called
 
     def test_add_contact_minimal_fields(self, service: ContactService):
         """Test adding contact with only required fields."""
@@ -216,6 +216,7 @@ class TestContactService:
         if not contact:
             pytest.fail("Contact should exist after edit.")
 
+        assert contact is not None
         assert contact.phone == "+380509999999"
         assert contact.email == "old@example.com"
         assert contact.address == "Old Address"
