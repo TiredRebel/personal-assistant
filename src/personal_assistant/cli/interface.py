@@ -29,7 +29,7 @@ except ImportError:
 
         # pyreadline3 uses a different API - get the readline instance
         READLINE_AVAILABLE = True
-        READLINE_MODULE = pyreadline3.Readline()  # type: ignore[attr-defined]
+        READLINE_MODULE = pyreadline3.Readline()
     except (ImportError, AttributeError):
         READLINE_AVAILABLE = False
         READLINE_MODULE = None
@@ -67,7 +67,7 @@ class CLI:
         self.running = False
 
         # Command registry
-        self.commands: Dict[str, Callable] = self._register_commands()
+        self.commands: Dict[str, Callable[..., None]] = self._register_commands()
 
         # Setup command completion
         self._setup_command_completion()
@@ -94,24 +94,24 @@ class CLI:
                 return None
 
             try:
-                READLINE_MODULE.set_completer(completer)  # type: ignore[attr-defined]
+                READLINE_MODULE.set_completer(completer)
 
                 # Configure readline behavior
                 # Use tab for completion, show all options on double-tab
                 if sys.platform == "win32":
-                    READLINE_MODULE.parse_and_bind("tab: complete")  # type: ignore[attr-defined]
+                    READLINE_MODULE.parse_and_bind("tab: complete")
                 else:
-                    READLINE_MODULE.parse_and_bind("tab: complete")  # type: ignore[attr-defined]
+                    READLINE_MODULE.parse_and_bind("tab: complete")
                     # On Unix, also enable menu-complete for cycling through options
-                    READLINE_MODULE.parse_and_bind("set show-all-if-ambiguous on")  # type: ignore[attr-defined]
+                    READLINE_MODULE.parse_and_bind("set show-all-if-ambiguous on")
 
                 # Set word delimiters (don't break on hyphens)
-                READLINE_MODULE.set_completer_delims(" \t\n")  # type: ignore[attr-defined]
+                READLINE_MODULE.set_completer_delims(" \t\n")
             except AttributeError:
                 # If methods don't exist, silently disable completion
                 pass
 
-    def _register_commands(self) -> Dict[str, Callable]:
+    def _register_commands(self) -> Dict[str, Callable[..., None]]:
         """
         Register all available commands.
 
@@ -223,7 +223,7 @@ class CLI:
 
     # Contact Commands
 
-    def add_contact(self, args: Optional[Dict] = None) -> None:
+    def add_contact(self, args: Optional[Dict[str, Any]] = None) -> None:
         """
         Add a new contact interactively.
 
@@ -347,7 +347,7 @@ class CLI:
         except Exception as e:
             self.show_error(f"Error adding contact: {str(e)}")
 
-    def search_contact(self, args: Optional[Dict] = None) -> None:
+    def search_contact(self, args: Optional[Dict[str, Any]] = None) -> None:
         """
         Search for contacts.
 
@@ -382,7 +382,7 @@ class CLI:
         else:
             self.show_warning(f"No contacts found matching '{query}'")
 
-    def list_contacts(self, args: Optional[Dict] = None) -> None:
+    def list_contacts(self, args: Optional[Dict[str, Any]] = None) -> None:
         """List all contacts."""
         print("\n--- All Contacts ---")
 
@@ -394,7 +394,7 @@ class CLI:
         else:
             self.show_warning("No contacts in address book")
 
-    def edit_contact(self, args: Optional[Dict] = None) -> None:
+    def edit_contact(self, args: Optional[Dict[str, Any]] = None) -> None:
         """
         Edit an existing contact.
 
@@ -473,7 +473,7 @@ class CLI:
             # Other errors
             self.show_error(f"Error updating contact: {str(e)}")
 
-    def delete_contact(self, args: Optional[Dict] = None) -> None:
+    def delete_contact(self, args: Optional[Dict[str, Any]] = None) -> None:
         """
         Delete a contact.
 
@@ -503,7 +503,7 @@ class CLI:
         else:
             self.show_error(f"Contact '{name}' not found")
 
-    def show_birthdays(self, args: Optional[Dict] = None) -> None:
+    def show_birthdays(self, args: Optional[Dict[str, Any]] = None) -> None:
         """
         Show upcoming birthdays.
 
@@ -546,7 +546,7 @@ class CLI:
 
     # Note Commands
 
-    def add_note(self, args: Optional[Dict] = None) -> None:
+    def add_note(self, args: Optional[Dict[str, Any]] = None) -> None:
         """
         Add a new note.
 
@@ -603,7 +603,7 @@ class CLI:
         except Exception as e:
             self.show_error(f"Error creating note: {str(e)}")
 
-    def search_note(self, args: Optional[Dict] = None) -> None:
+    def search_note(self, args: Optional[Dict[str, Any]] = None) -> None:
         """
         Search notes by content or ID.
 
@@ -642,7 +642,7 @@ class CLI:
         else:
             self.show_warning(f"No notes found matching '{query}'")
 
-    def list_notes(self, args: Optional[Dict] = None) -> None:
+    def list_notes(self, args: Optional[Dict[str, Any]] = None) -> None:
         """List all notes."""
         print("\n--- All Notes ---")
 
@@ -654,7 +654,7 @@ class CLI:
         else:
             self.show_warning("No notes available")
 
-    def search_notes_by_tag(self, args: Optional[Dict] = None) -> None:
+    def search_notes_by_tag(self, args: Optional[Dict[str, Any]] = None) -> None:
         """
         Search notes by tags.
 
@@ -686,7 +686,7 @@ class CLI:
         else:
             self.show_warning(f"No notes found with tags: {', '.join(tags)}")
 
-    def list_all_tags(self, args: Optional[Dict] = None) -> None:
+    def list_all_tags(self, args: Optional[Dict[str, Any]] = None) -> None:
         """List all available tags."""
         print("\n--- All Tags ---")
 
@@ -718,7 +718,7 @@ class CLI:
             if days is not None:
                 print(f"          ({days} days until birthday)")
 
-    def display_contacts_table(self, contacts: List) -> None:
+    def display_contacts_table(self, contacts: List[Contact]) -> None:
         """Display contacts in a table format."""
         # Print table header
         print(f"\n{'Name':<25} {'Phone':<20} {'Email':<30}")
@@ -740,7 +740,7 @@ class CLI:
         print(f"Created:  {note.created_at.strftime('%Y-%m-%d %H:%M')}")
         print(f"Updated:  {note.updated_at.strftime('%Y-%m-%d %H:%M')}")
 
-    def display_notes_list(self, notes: List) -> None:
+    def display_notes_list(self, notes: List[Note]) -> None:
         """Display notes in a list format."""
         for i, note in enumerate(notes, 1):
             print(f"\n{i}. [{note.id[:8]}] ", end="")
@@ -759,7 +759,7 @@ class CLI:
 
     # System Commands
 
-    def show_help(self, args: Optional[Dict] = None) -> None:
+    def show_help(self, args: Optional[Dict[str, Any]] = None) -> None:
         """Show detailed help information."""
         print("\n--- Personal Assistant Help ---")
         print("\nAvailable Commands:")
@@ -768,7 +768,7 @@ class CLI:
             doc = cmd_func.__doc__ or "No description"
             print(f"  {cmd_name:<20} - {doc.strip()}")
 
-    def show_statistics(self, args: Optional[Dict] = None) -> None:
+    def show_statistics(self, args: Optional[Dict[str, Any]] = None) -> None:
         """Show application statistics."""
         print("\n--- Statistics ---")
 
@@ -780,7 +780,7 @@ class CLI:
         print(f"Notes:     {note_count}")
         print(f"Tags:      {tag_count}")
 
-    def clear_screen(self, args: Optional[Dict] = None) -> None:
+    def clear_screen(self, args: Optional[Dict[str, Any]] = None) -> None:
         """Clear the terminal screen."""
 
         os.system("cls" if os.name == "nt" else "clear")
@@ -792,7 +792,7 @@ class CLI:
         else:
             self.show_warning("Continuing...")
 
-    def exit_app(self, args: Optional[Dict] = None) -> None:
+    def exit_app(self, args: Optional[Dict[str, Any]] = None) -> None:
         """Exit the application."""
         print("\nThank you for using Personal Assistant!")
         print("Goodbye!")
@@ -826,7 +826,7 @@ class CLI:
             print(f"\n✗ Command not recognized: '{command_str}'")
             print("Type 'help' for available commands")
 
-    def edit_note(self, args: Optional[Dict] = None) -> None:
+    def edit_note(self, args: Optional[Dict[str, Any]] = None) -> None:
         """
         Edit an existing note.
 
@@ -933,7 +933,7 @@ class CLI:
             # Other errors
             self.show_error(f"Error updating note: {str(e)}")
 
-    def delete_note(self, args: Optional[Dict] = None) -> None:
+    def delete_note(self, args: Optional[Dict[str, Any]] = None) -> None:
         """
         Delete a note.
 

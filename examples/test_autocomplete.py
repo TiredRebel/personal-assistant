@@ -44,11 +44,11 @@ print("ТЕСТ: Автодоповнення працює?")
 try:
     # Спробуємо імпортувати readline
     try:
-        import readline
+        import readline  # noqa: F401
         print("✓ readline доступний (підтримка Tab completion)")
     except ImportError:
         try:
-            import pyreadline3 as readline  # type: ignore
+            import pyreadline3  # noqa: F401
             print("✓ pyreadline3 доступний (підтримка Tab completion)")
         except ImportError:
             print("✗ readline не доступний")

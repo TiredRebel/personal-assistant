@@ -94,7 +94,9 @@ class IntentRecognizer:
         return {"action": action, "entity": entity, "confidence": confidence}
 
     @classmethod
-    def extract_parameters(cls, text: str, intent: Dict) -> Dict[str, Union[str, List[str]]]:
+    def extract_parameters(
+        cls, text: str, intent: Dict[str, Union[str, float]]
+    ) -> Dict[str, Union[str, List[str]]]:
         """
         Extract parameters based on recognized intent.
 
@@ -106,7 +108,8 @@ class IntentRecognizer:
 
         Args:
             text: User input text
-            intent: Recognized intent dictionary (not used currently, but available for future enhancements)
+            intent: Recognized intent dictionary (not used currently,
+                but available for future enhancements)
 
         Returns:
             Dictionary of extracted parameters

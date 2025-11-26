@@ -236,7 +236,7 @@ class EmailValidator:
         return email.strip().lower()
 
     @staticmethod
-    def check_common_typos(email: str) -> list:
+    def check_common_typos(email: str) -> list[str]:
         """
         Check for common email typos.
 
@@ -434,7 +434,7 @@ class ValidationError(Exception):
             return f"Validation error for '{self.field}': {self.message}"
         return f"Validation error: {self.message}"
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Optional[str]]:
         """
         Return a dictionary suitable for logging / API responses.
         Note: 'value' is intentionally excluded to avoid exposing private data.

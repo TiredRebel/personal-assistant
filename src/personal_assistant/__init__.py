@@ -12,20 +12,46 @@ from __future__ import annotations
 
 from typing import Final
 
-from .cli import *
-from .models import *
-from .services import *
-from .storage import *
-from .validators import *
+from .cli import CLI, ColoredCLI, CommandParser, IntentRecognizer, SmartCommandParser
+from .models import Contact, Note
+from .services import ContactService, NoteService
+from .storage import DateTimeEncoder, FileStorage
+from .validators import (
+    BirthdayValidator,
+    EmailValidationError,
+    EmailValidator,
+    InputValidator,
+    PhoneValidationError,
+    PhoneValidator,
+    ValidationError,
+)
 
 __version__: Final[str] = "1.0.0"
 __author__: Final[str] = "Your Team Name"
 
 # Package metadata
 __all__: list[str] = [
-    "models",
-    "services",
-    "storage",
-    "validators",
-    "cli",
+    # CLI
+    "CLI",
+    "ColoredCLI",
+    "CommandParser",
+    "IntentRecognizer",
+    "SmartCommandParser",
+    # Models
+    "Contact",
+    "Note",
+    # Services
+    "ContactService",
+    "NoteService",
+    # Storage
+    "FileStorage",
+    "DateTimeEncoder",
+    # Validators
+    "PhoneValidator",
+    "EmailValidator",
+    "InputValidator",
+    "ValidationError",
+    "PhoneValidationError",
+    "EmailValidationError",
+    "BirthdayValidator",
 ]

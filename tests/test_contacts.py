@@ -106,11 +106,10 @@ class TestContactModel:
 
     def test_days_until_birthday_calculation(self) -> None:
         """Test birthday countdown calculation."""
-        # Create contact with birthday
-        today = date.today()
-        future_date = date(today.year, 12, 31)
+        # Create contact with birthday (born in 1990, birthday on Dec 31)
+        birthday = date(1990, 12, 31)
 
-        contact = Contact(name="Test User", phone="+380501234567", birthday=future_date)
+        contact = Contact(name="Test User", phone="+380501234567", birthday=birthday)
 
         days = contact.days_until_birthday()
         assert days is not None
