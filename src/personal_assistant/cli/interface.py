@@ -3,6 +3,8 @@ import sys
 from datetime import date
 from typing import Any, Callable, Dict, List, Optional
 
+from tabulate import tabulate
+
 from personal_assistant.cli.command_parser import CommandParser
 from personal_assistant.models import Contact, Note
 from personal_assistant.services.contact_service import ContactService
@@ -191,29 +193,37 @@ class CLI:
 
     def show_main_menu(self) -> None:
         """Display main menu options."""
-        print("\n--- Main Menu ---")
-        print("Contact Management:")
-        print("  add-contact      - Add a new contact")
-        print("  search-contact   - Search for contacts")
-        print("  list-contacts    - List all contacts")
-        print("  edit-contact     - Edit a contact")
-        print("  delete-contact   - Delete a contact")
-        print("  birthdays        - Show upcoming birthdays")
-        print()
-        print("Note Management:")
-        print("  add-note         - Create a new note")
-        print("  search-note      - Search notes")
-        print("  list-notes       - List all notes")
-        print("  edit-note        - Edit a note")
-        print("  delete-note      - Delete a note")
-        print("  search-by-tag    - Search notes by tag")
-        print("  list-tags        - Show all tags")
-        print()
-        print("System:")
-        print("  help             - Show detailed help")
-        print("  stats            - Show statistics")
-        print("  clear            - Clear screen")
-        print("  exit             - Exit application")
+        data = [
+            # Contact Management
+            ["Contact Management", "add-contact", "Add a new contact"],
+            ["", "search-contact", "Search for contacts"],
+            ["", "list-contacts", "List all contacts"],
+            ["", "edit-contact", "Edit a contact"],
+            ["", "delete-contact", "Delete a contact"],
+            ["", "birthdays", "Show upcoming birthdays"],
+            # Note Management
+            ["Note Management", "add-note", "Create a new note"],
+            ["", "search-note", "Search notes"],
+            ["", "list-notes", "List all notes"],
+            ["", "edit-note", "Edit a note"],
+            ["", "delete-note", "Delete a note"],
+            ["", "search-by-tag", "Search notes by tag"],
+            ["", "list-tags", "Show all tags"],
+            # System
+            ["System", "help", "Show detailed help"],
+            ["", "stats", "Show statistics"],
+            ["", "clear", "Clear screen"],
+            ["", "exit", "Exit application"],
+        ]
+
+        print(
+            tabulate(
+                data,
+                headers=["Section", "Command", "Description"],
+                tablefmt="grid",
+                stralign="left",
+            )
+        )
 
     def execute_command(self, command_str: str) -> None:
         """
@@ -773,11 +783,42 @@ class CLI:
     def show_help(self, args: Optional[Dict[str, Any]] = None) -> None:
         """Show detailed help information."""
         print("\n--- Personal Assistant Help ---")
-        print("\nAvailable Commands:")
 
+        command_args = {
+            "add-contact": "name, phone, [email], [address], [birthday]",
+            "search-contact": "query (name, phone, or email)",
+            "list-contacts": "No arguments",
+            "edit-contact": "name, [options: --name, --phone, --email, --address, --birthday]",
+            "delete-contact": "name",
+            "birthdays": "[days] (default: 7)",
+            "add-note": "[title], [content], [tags]",
+            "search-note": "query (content or ID)",
+            "list-notes": "No arguments",
+            "edit-note": "id, [options: --title, --content, --tags]",
+            "delete-note": "id",
+            "search-by-tag": "tags (comma-separated)",
+            "list-tags": "No arguments",
+            "help": "No arguments",
+            "stats": "No arguments",
+            "clear": "No arguments",
+            "exit": "No arguments",
+        }
+
+        data = []
         for cmd_name, cmd_func in self.commands.items():
             doc = cmd_func.__doc__ or "No description"
-            print(f"  {cmd_name:<20} - {doc.strip()}")
+            description = doc.strip().split("\n")[0]
+            args_str = command_args.get(cmd_name, "")
+            data.append([cmd_name, args_str, description])
+
+        print(
+            tabulate(
+                data,
+                headers=["Command", "Arguments", "Description"],
+                tablefmt="simple",
+                stralign="left",
+            )
+        )
 
     def show_statistics(self, args: Optional[Dict[str, Any]] = None) -> None:
         """Show application statistics."""
